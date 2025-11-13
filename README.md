@@ -1,8 +1,7 @@
 # Trabalho-3-CSD
-Repositório para armazenar descrição completa do terceiro trabalho da cadeira de Construção de Sistemas digitais.
 
 TESTE:
-O primeiro exemplo (VGA Demo) ilustra o uso de todas as funcionalidades do driver de v´ıdeo e GDI (Graphics Display Interface), que inclui
+  O primeiro exemplo (VGA Demo) ilustra o uso de todas as funcionalidades do driver de v´ıdeo e GDI (Graphics Display Interface), que inclui
 uma API para acesso `as fun¸c˜oes gr´aficas. O segundo exemplo ilustra o uso
 de processamento em 3D utilizando c´alculos por software e o terceiro exemplo mostra um exemplo de jogo, contendo uma bola, objetos, detec¸c˜ao de
 colis˜ao e controles dos bot˜oes. O ´ultimo exemplo apresenta uma forma de
@@ -27,3 +26,9 @@ desempenho aceit´avel no jogo. A mem´oria de v´ıdeo ´e uma mem´oria de
 porta simples, sendo seu acesso multiplexado pelo controlador gr´afico e a
 CPU2
 .
+
+
+TECLAS:
+A - left
+D - right
+K - shoot
