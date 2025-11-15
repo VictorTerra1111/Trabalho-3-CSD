@@ -3,7 +3,7 @@
 #include "game_sprites.h"
 #include "game_functions.h"
 
-int main(void)
+int main()
 {
 	struct object_s enemy1;
 	struct object_s enemy2;
