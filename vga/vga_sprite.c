@@ -3,31 +3,6 @@
 #include "game_sprites.h"
 #include "game_functions.h"
 
-
-
-int get_input()
-{
-	int keys = 0;
-	
-	if (GPIOB->IN & MASK_P8)	keys |= KEY_CENTER;
-	if (GPIOB->IN & MASK_P9)	keys |= KEY_UP;
-	if (GPIOB->IN & MASK_P10)	keys |= KEY_LEFT;
-	if (GPIOB->IN & MASK_P11)	keys |= KEY_RIGHT;
-	if (GPIOB->IN & MASK_P12)	keys |= KEY_DOWN;
-		
-	return keys;
-}
-
-int detect_collision(struct object_s *obj1, struct object_s *obj2)
-{
-	if (obj1->posx < obj2->posx + obj2->spriteszx &&
-		obj1->posx + obj1->spriteszx > obj2->posx &&
-		obj1->posy < obj2->posy + obj2->spriteszy &&
-		obj1->posy + obj1->spriteszy > obj2->posy) return 1;
-
-	return 0;
-}
-
 int main(void)
 {
 	struct object_s enemy1, enemy2, enemy3;
