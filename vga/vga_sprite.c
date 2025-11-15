@@ -1,5 +1,6 @@
 #include <hf-risc.h>
 #include "vga_drv.h"
+#include "game_sprites.h"
 
 /* sprites and sprite drawing */
 char monster1a[8][11] = {
