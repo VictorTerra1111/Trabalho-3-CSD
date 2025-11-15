@@ -1,4 +1,5 @@
 #include <hf-risc.h>
+#include "game_functions.h"
 #include "vga_drv.h"
 #include "game_sprites.h"
 
@@ -18,17 +19,6 @@ void draw_sprite(unsigned int x, unsigned int y, char *sprite,
 	}
 	
 }
-
-/* sprite based objects */
-struct object_s {
-	char *sprite_frame[3];
-	char spriteszx, spriteszy, sprites;
-	int cursprite;
-	unsigned int posx, posy;
-	int dx, dy;
-	int speedx, speedy;
-	int speedxcnt, speedycnt;
-};
 
 
 void init_object(struct object_s *obj, char *spritea, char *spriteb,
@@ -95,13 +85,6 @@ void init_display()
 	display_background(BLACK);
 }
 
-enum {
-	KEY_CENTER	= 0x01,
-	KEY_UP		= 0x02,
-	KEY_LEFT	= 0x04,
-	KEY_RIGHT	= 0x08,
-	KEY_DOWN	= 0x10
-};
 
 void init_input()
 {
