@@ -2,29 +2,6 @@
 #include "vga_drv.h"
 #include "game_sprites.h"
 
-/* sprites and sprite drawing */
-char monster1a[8][11] = {
-	{0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0}, // topo da cabeça
-	{0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0}, // parte superior + olhos
-	{0, 2, 0, 2, 0, 0, 0, 2, 0, 2, 0}, // lados + olhos
-	{0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0}, // bochechas
-	{0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0}, // bochechas
-	{0, 2, 0, 0, 2, 2, 2, 0, 0, 2, 0}, // sorriso
-	{0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0}, // parte inferior da boca
-	{0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0}  // base da cabeça
-};
-
-char monster1b[8][11] = {
-	{0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0}, // topo da cabeça
-	{0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0}, // parte superior + olhos
-	{0, 2, 0, 2, 0, 0, 0, 2, 0, 2, 0}, // lados + olhos
-	{0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0}, // bochechas
-	{0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0}, // bochechas
-	{0, 2, 0, 2, 2, 0, 2, 2, 0, 2, 0}, // sorriso
-	{0, 0, 2, 0, 2, 2, 2, 0, 2, 0, 0}, // parte inferior da boca
-	{0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0}  // base da cabeça
-};
-
 void draw_sprite(unsigned int x, unsigned int y, char *sprite,
 	unsigned int sizex, unsigned int sizey, int color)
 {
@@ -155,7 +132,6 @@ int detect_collision(struct object_s *obj1, struct object_s *obj2)
 	return 0;
 }
 
-/* main game loop */
 int main(void)
 {
 	struct object_s enemy1, enemy2, enemy3;
