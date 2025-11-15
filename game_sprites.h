@@ -1,9 +1,6 @@
 #ifndef SPRITES_H
 #define SPRITES_H
 
-#include <hf-risc.h>
-#include "vga_drv.h"
-
 extern char monster1_an1[8][8];
 extern char monster1_an2[8][8];
 
