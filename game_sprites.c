@@ -1,5 +1,6 @@
 #include <hf-risc.h>
 #include "vga_drv.h"
+#include "game_sprites.h"
 
 char monster1_an1[8][8] = {
         {0,0,0,2,2,2,0,0},
