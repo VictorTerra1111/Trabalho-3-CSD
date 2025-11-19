@@ -1,7 +1,5 @@
-#include <hf-risc.h>
-#include "vga_drv.h"
-#include "game_sprites.h"
 #include "game_functions.h"
+#include "game_sprites.h"
 
 // func display_print() -- Acho que vem do vga_drv.h
 // 0, 0, 0, color		--  x, y, size, color    (0, 0) = top left corner
@@ -31,7 +29,7 @@ int main()
 	init_input();
 
 	// enemies
-	init_object(&enemy1, &monster1_an1[0][0], &monster1_an2[0][0], 0,
+	init_object(&enemy1, &[0][0], &monster1_an2[0][0], 0,
 	            8, 8, 30, 35, 1, 1, 3, 3);
 
 	init_object(&enemy2, &monster2_an1[0][0], &monster2_an2[0][0], 0,

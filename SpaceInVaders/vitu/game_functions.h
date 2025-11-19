@@ -1,7 +1,7 @@
 #ifndef GAME_ENGINE_H
 #define GAME_ENGINE_H
 
-#include "/home/be/Work/hf-risc/software/include/hf-risc.h"
+#include <hf-risc.h>
 #include "vga_drv.h"
 
 struct object_s {

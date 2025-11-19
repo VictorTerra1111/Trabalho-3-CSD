@@ -1,6 +1,4 @@
-#include <hf-risc.h>
 #include "game_functions.h"
-#include "vga_drv.h"
 #include "game_sprites.h"
 
 void draw_sprite(unsigned int x, unsigned int y, char *sprite,
