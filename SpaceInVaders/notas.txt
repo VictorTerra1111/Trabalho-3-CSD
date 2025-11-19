@@ -1,0 +1,25 @@
+-caminho para o programa principal: ~/Work/hf-risc/software/app/vga 
+
+-programa principal é o spaceinvaders.c;
+
+-mandar o arquivo para a pasta app antes de executar;
+
+-o xdc está /home/be/Área de trabalho/SpaceInVaders/srcs/artix7_nexysa7_basic_soc_vga.xdc
+
+-para executar o jogo : 
+			no terminal principal
+
+			make spaceinvaders F_CLK=50000000
+			make serial SERIAL_DEV=/dev/ttyUSB1
+
+			no outro terminal: 
+			
+			cat /dev/ttyUSB1
+
+			-apertar para rst a cpu
+
+			volta para o terminal principal:
+
+			make load SERIAL_DEV=/dev/ttyUSB1
+
+

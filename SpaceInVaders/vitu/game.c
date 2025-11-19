@@ -3,13 +3,29 @@
 #include "game_sprites.h"
 #include "game_functions.h"
 
+// func display_print() -- Acho que vem do vga_drv.h
+// 0, 0, 0, color		--  x, y, size, color    (0, 0) = top left corner
+
+
+// ======================
+// Variaveis de ambiente
+// ======================
+
+// Configuração de velocidade do player
+// Valores positivos = frames por movimento (2=médio, 3=lento); Valor 1 = move 1 pixel por frame (rápido); Valores negativos = pixels por frame (-2=muito rápido, move 2 pixels por frame)
+int PLAYER_SPEED = -2;
+
 int main()
 {
+	int score = 0;
+	
 	struct object_s enemy1;
 	struct object_s enemy2;
 	struct object_s enemy3;
 
-	struct object_s p1, sh1, sh2, sh3, sh4;
+	struct object_s p1, sh1, sh2, sh3, sh4, bullet;
+
+	
 
 	init_display();
 	init_input();
@@ -26,7 +42,7 @@ int main()
 
 	// player
 	init_object(&p1, &player[0][0], 0, 0,
-	            8, 8, 120, 180, 0, 0, 1, 1);
+	            8, 8, 120, 180, 0, 0, PLAYER_SPEED, PLAYER_SPEED);
 
 	// all four shields 
 	init_object(&sh1, &shield[0][0], 0, 0,
@@ -48,20 +64,25 @@ int main()
 		move_object(&enemy2);
 		move_object(&enemy3);
 
-		if (detect_collision(&enemy1, &enemy2)) display_print("collision: 1 and 2", 0, 180, 1, CYAN);
-		if (detect_collision(&enemy1, &enemy3)) display_print("collision: 1 and 3", 0, 180, 1, CYAN);
-		if (detect_collision(&enemy2, &enemy3)) display_print("collision: 2 and 3", 0, 180, 1, CYAN);
+		control_player(&p1);
+
+
+		if (get_input() == KEY_UP) {
+			//move_object(&bullet_obj);
+		}
+
+		//if (detect_collision(&enemy1, &enemy2)) display_print("collision: 1 and 2", 0, 180, 1, CYAN);
+		//if (detect_collision(&enemy1, &enemy3)) display_print("collision: 1 and 3", 0, 180, 1, CYAN);
+		//if (detect_collision(&enemy2, &enemy3)) display_print("collision: 2 and 3", 0, 180, 1, CYAN);
 		
-		if (get_input() == KEY_CENTER) {
-			enemy2.dx = 0;
-		}
-		if (get_input() == KEY_LEFT) {
-			enemy2.dx = -1;
-		}
-		if (get_input() == KEY_RIGHT) {
-			enemy2.dx = 1;
-		}
-		
+		/*if(score ++){
+			display_frectangle(0, 0, 80, 10, BLACK);
+		char buffer[20];
+		sprintf(buffer, "%d", score);
+		display_print(buffer, 0, 0, 1, RED);
+		*/
+
+
 		delay_ms(50);
 	}
 

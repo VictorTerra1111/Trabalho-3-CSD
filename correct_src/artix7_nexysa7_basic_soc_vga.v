@@ -1,3 +1,7 @@
+//================================================================================
+// HF-RISC-V SoC - Complete Top Module with VGA and PS/2 Keyboard Support
+// Nexys A7 100T Board
+//================================================================================
 module hfrisc_soc
 (
     input wire clk_i,
@@ -6,7 +10,7 @@ module hfrisc_soc
     inout wire [15:0] gpiob,
     output wire uart_tx,
     input wire uart_rx,
-    // PS/2 interface
+    // PS/2 Keyboard interface
     input wire PS2_CLK,
     input wire PS2_DATA,
     input wire [7:0] sw_i,
@@ -20,55 +24,67 @@ module hfrisc_soc
 
     parameter [31:0] address_width = 15;
 
-    reg clock; 
-    wire boot_enable; 
-    wire [3:0] ram_enable_n; 
-    wire stall; 
-    reg ram_dly; 
-    reg rff1; 
+    //========================================================================
+    // Internal Signal Declarations
+    //========================================================================
+    
+    // Clock and Reset
+    reg clock;
+    reg rff1;
     reg reset;
+    wire reset_n;
     
-    wire [31:0] address; 
-    wire [31:0] data_read; 
-    wire [31:0] data_write; 
-    wire [31:0] data_read_boot; 
+    // Memory Control
+    wire boot_enable;
+    wire ram_enable_n;
+    wire stall;
+    reg ram_dly;
+    
+    // CPU Interface
+    wire [31:0] address;
+    wire [31:0] data_read;
+    wire [31:0] data_write;
+    wire [31:0] data_read_boot;
     wire [31:0] data_read_ram;
-    wire [7:0] ext_irq;
-    wire [3:0] data_we; 
+    wire [3:0] data_we;
     wire [3:0] data_w_n_ram;
+    wire [7:0] ext_irq;
     
-    wire periph; 
-    reg periph_dly; 
-    wire periph_wr; 
+    // Peripheral Interface
+    wire periph;
+    reg periph_dly;
+    wire periph_wr;
     wire periph_irq;
-    wire [31:0] data_read_periph; 
-    wire [31:0] data_read_periph_s; 
+    wire [31:0] data_read_periph;
+    wire [31:0] data_read_periph_s;
     wire [31:0] data_write_periph;
     
-    wire [15:0] gpioa_in; 
-    wire [15:0] gpioa_out; 
+    // GPIO Signals
+    wire [15:0] gpioa_in;
+    wire [15:0] gpioa_out;
     wire [15:0] gpioa_ddr;
-    wire [15:0] gpiob_in; 
-    wire [15:0] gpiob_out; 
+    wire [15:0] gpiob_in;
+    wire [15:0] gpiob_out;
     wire [15:0] gpiob_ddr;
     
-    // VGA signals
-    wire ext_periph_vga; 
+    // VGA Peripheral Signals
+    wire ext_periph_vga;
     reg ext_periph_vga_dly;
-    wire [31:0] data_read_vga; 
+    wire [31:0] data_read_vga;
     wire [31:0] data_read_vga_s;
     
-    // PS/2 / AXIS signals
-    wire ext_periph_axis; 
+    // PS/2 / AXIS Peripheral Signals
+    wire ext_periph_axis;
     reg ext_periph_axis_dly;
-    wire reset_n;
-    wire [31:0] data_read_axis; 
+    wire [31:0] data_read_axis;
     wire [31:0] data_read_axis_s;
-    wire m_axis_tready_s; 
+    wire m_axis_tready_s;
     wire m_axis_tvalid_s;
     wire [7:0] m_axis_tdata_s;
 
-    // clock divider (50MHz clock from 100MHz main clock for Nexys A7 kit)
+    //========================================================================
+    // Clock Divider (50MHz from 100MHz for Nexys A7)
+    //========================================================================
     always @(posedge clk_i, posedge rst_i) begin
         if (rst_i == 1'b1) begin
             clock <= 1'b0;
@@ -77,7 +93,9 @@ module hfrisc_soc
         end
     end
 
-    // reset synchronizer
+    //========================================================================
+    // Reset Synchronizer
+    //========================================================================
     always @(posedge clock, posedge rst_i) begin
         if (rst_i == 1'b1) begin
             rff1 <= 1'b1;
@@ -88,6 +106,11 @@ module hfrisc_soc
         end
     end
 
+    assign reset_n = ~reset;
+
+    //========================================================================
+    // Pipeline Delay Registers for Memory/Peripheral Access
+    //========================================================================
     always @(posedge clock, posedge reset) begin
         if (reset == 1'b1) begin
             ram_dly <= 1'b0;
@@ -102,8 +125,11 @@ module hfrisc_soc
         end
     end
 
-    // GPIO A configurations (mantém igual)
-    // JA (inputs)
+    //========================================================================
+    // GPIO A Configuration (PMOD JA and JB)
+    //========================================================================
+    
+    // JA - Bidirectional pins (0-7)
     assign gpioa[0] = gpioa_ddr[0] == 1'b1 ? gpioa_out[0] : 1'bZ;
     assign gpioa[1] = gpioa_ddr[1] == 1'b1 ? gpioa_out[1] : 1'bZ;
     assign gpioa[2] = gpioa_ddr[2] == 1'b1 ? gpioa_out[2] : 1'bZ;
@@ -112,7 +138,8 @@ module hfrisc_soc
     assign gpioa[5] = gpioa_ddr[5] == 1'b1 ? gpioa_out[5] : 1'bZ;
     assign gpioa[6] = gpioa_ddr[6] == 1'b1 ? gpioa_out[6] : 1'bZ;
     assign gpioa[7] = gpioa_ddr[7] == 1'b1 ? gpioa_out[7] : 1'bZ;
-    // JB (inputs)
+    
+    // JB - Bidirectional pins (8-15)
     assign gpioa[8] = gpioa_ddr[8] == 1'b1 ? gpioa_out[8] : 1'bZ;
     assign gpioa[9] = gpioa_ddr[9] == 1'b1 ? gpioa_out[9] : 1'bZ;
     assign gpioa[10] = gpioa_ddr[10] == 1'b1 ? gpioa_out[10] : 1'bZ;
@@ -121,15 +148,16 @@ module hfrisc_soc
     assign gpioa[13] = gpioa_ddr[13] == 1'b1 ? gpioa_out[13] : 1'bZ;
     assign gpioa[14] = gpioa_ddr[14] == 1'b1 ? gpioa_out[14] : 1'bZ;
     assign gpioa[15] = gpioa_ddr[15] == 1'b1 ? gpioa_out[15] : 1'bZ;
-    // JA (outputs)
+    
+    // Input capture for GPIO A
     assign gpioa_in[0] = gpioa_ddr[0] == 1'b1 ? 1'b0 : gpioa[0];
     assign gpioa_in[1] = gpioa_ddr[1] == 1'b1 ? 1'b0 : gpioa[1];
     assign gpioa_in[2] = gpioa_ddr[2] == 1'b1 ? 1'b0 : gpioa[2];
+    assign gpioa_in[3] = uart_rx;  // UART RX hardwired
     assign gpioa_in[4] = gpioa_ddr[4] == 1'b1 ? 1'b0 : gpioa[4];
     assign gpioa_in[5] = gpioa_ddr[5] == 1'b1 ? 1'b0 : gpioa[5];
     assign gpioa_in[6] = gpioa_ddr[6] == 1'b1 ? 1'b0 : gpioa[6];
     assign gpioa_in[7] = gpioa_ddr[7] == 1'b1 ? 1'b0 : gpioa[7];
-    // JB (outputs)
     assign gpioa_in[8] = gpioa_ddr[8] == 1'b1 ? 1'b0 : gpioa[8];
     assign gpioa_in[9] = gpioa_ddr[9] == 1'b1 ? 1'b0 : gpioa[9];
     assign gpioa_in[10] = gpioa_ddr[10] == 1'b1 ? 1'b0 : gpioa[10];
@@ -139,12 +167,14 @@ module hfrisc_soc
     assign gpioa_in[14] = gpioa_ddr[14] == 1'b1 ? 1'b0 : gpioa[14];
     assign gpioa_in[15] = gpioa_ddr[15] == 1'b1 ? 1'b0 : gpioa[15];
 
-    // UART
+    // UART TX hardwired to GPIO A pin 2
     assign uart_tx = gpioa_out[2];
-    assign gpioa_in[3] = uart_rx;
 
-    // GPIO B (mantém igual ao original)
-    // JC (inputs)
+    //========================================================================
+    // GPIO B Configuration (PMOD JC and JD)
+    //========================================================================
+    
+    // JC - Bidirectional pins (0-7)
     assign gpiob[0] = gpiob_ddr[0] == 1'b1 ? gpiob_out[0] : 1'bZ;
     assign gpiob[1] = gpiob_ddr[1] == 1'b1 ? gpiob_out[1] : 1'bZ;
     assign gpiob[2] = gpiob_ddr[2] == 1'b1 ? gpiob_out[2] : 1'bZ;
@@ -153,7 +183,8 @@ module hfrisc_soc
     assign gpiob[5] = gpiob_ddr[5] == 1'b1 ? gpiob_out[5] : 1'bZ;
     assign gpiob[6] = gpiob_ddr[6] == 1'b1 ? gpiob_out[6] : 1'bZ;
     assign gpiob[7] = gpiob_ddr[7] == 1'b1 ? gpiob_out[7] : 1'bZ;
-    // JD (inputs)
+    
+    // JD - Bidirectional pins (8-15)
     assign gpiob[8] = gpiob_ddr[8] == 1'b1 ? gpiob_out[8] : 1'bZ;
     assign gpiob[9] = gpiob_ddr[9] == 1'b1 ? gpiob_out[9] : 1'bZ;
     assign gpiob[10] = gpiob_ddr[10] == 1'b1 ? gpiob_out[10] : 1'bZ;
@@ -162,7 +193,8 @@ module hfrisc_soc
     assign gpiob[13] = gpiob_ddr[13] == 1'b1 ? gpiob_out[13] : 1'bZ;
     assign gpiob[14] = gpiob_ddr[14] == 1'b1 ? gpiob_out[14] : 1'bZ;
     assign gpiob[15] = gpiob_ddr[15] == 1'b1 ? gpiob_out[15] : 1'bZ;
-    // JC (outputs)
+    
+    // Input capture for GPIO B
     assign gpiob_in[0] = gpiob_ddr[0] == 1'b1 ? 1'b0 : gpiob[0];
     assign gpiob_in[1] = gpiob_ddr[1] == 1'b1 ? 1'b0 : gpiob[1];
     assign gpiob_in[2] = gpiob_ddr[2] == 1'b1 ? 1'b0 : gpiob[2];
@@ -171,7 +203,6 @@ module hfrisc_soc
     assign gpiob_in[5] = gpiob_ddr[5] == 1'b1 ? 1'b0 : gpiob[5];
     assign gpiob_in[6] = gpiob_ddr[6] == 1'b1 ? 1'b0 : gpiob[6];
     assign gpiob_in[7] = gpiob_ddr[7] == 1'b1 ? 1'b0 : gpiob[7];
-    // JD (outputs)
     assign gpiob_in[8] = gpiob_ddr[8] == 1'b1 ? 1'b0 : gpiob[8];
     assign gpiob_in[9] = gpiob_ddr[9] == 1'b1 ? 1'b0 : gpiob[9];
     assign gpiob_in[10] = gpiob_ddr[10] == 1'b1 ? 1'b0 : gpiob[10];
@@ -181,21 +212,30 @@ module hfrisc_soc
     assign gpiob_in[14] = gpiob_ddr[14] == 1'b1 ? 1'b0 : gpiob[14];
     assign gpiob_in[15] = gpiob_ddr[15] == 1'b1 ? 1'b0 : gpiob[15];
 
+    //========================================================================
+    // Memory and Peripheral Address Decoding
+    //========================================================================
     assign stall = 1'b0;
-    assign boot_enable = address[31:28] == 4'b0000 ? 1'b1 : 1'b0;
-    assign ram_enable_n = address[31:28] == 4'b0100 ? 4'b0000 : 4'b1111;
-    
-    // Multiplexador de leitura com prioridade: AXIS > VGA > Periph > Boot/RAM
+    assign boot_enable = (address[31:28] == 4'b0000) ? 1'b1 : 1'b0;
+    assign ram_enable_n = (address[31:28] == 4'b0100) ? 1'b0 : 1'b1;
+    assign periph = (address[31:24] == 8'he1) ? 1'b1 : 1'b0;
+
+    //========================================================================
+    // Data Read Multiplexer with Priority:
+    // AXIS (Keyboard) > VGA > Standard Peripherals > Boot ROM > RAM
+    //========================================================================
     assign data_read = (ext_periph_axis == 1'b1 || ext_periph_axis_dly == 1'b1) ? data_read_axis :
                        (ext_periph_vga == 1'b1 || ext_periph_vga_dly == 1'b1) ? data_read_vga :
                        (periph == 1'b1 || periph_dly == 1'b1) ? data_read_periph :
-                       (address[31:28] == 4'b0000 && ram_dly == 1'b0) ? data_read_boot : 
+                       (address[31:28] == 4'b0000 && ram_dly == 1'b0) ? data_read_boot :
                        data_read_ram;
-    
+
     assign data_w_n_ram = ~data_we;
     assign ext_irq = {7'b0000000, periph_irq};
 
-    // HF-RISCV core
+    //========================================================================
+    // HF-RISC-V Processor Core
+    //========================================================================
     processor processor
     (
         .clk_i(clock),
@@ -210,12 +250,14 @@ module hfrisc_soc
         .extio_out(/* open */)
     );
 
-    assign data_read_periph = {data_read_periph_s[7:0], data_read_periph_s[15:8], 
+    //========================================================================
+    // Standard Peripherals (UART, Timers, GPIO)
+    //========================================================================
+    assign data_read_periph = {data_read_periph_s[7:0], data_read_periph_s[15:8],
                                data_read_periph_s[23:16], data_read_periph_s[31:24]};
-    assign data_write_periph = {data_write[7:0], data_write[15:8], 
+    assign data_write_periph = {data_write[7:0], data_write[15:8],
                                 data_write[23:16], data_write[31:24]};
-    assign periph_wr = data_we != 4'b0000 ? 1'b1 : 1'b0;
-    assign periph = address[31:24] == 8'he1 ? 1'b1 : 1'b0;
+    assign periph_wr = (data_we != 4'b0000) ? 1'b1 : 1'b0;
 
     peripherals peripherals
     (
@@ -235,8 +277,10 @@ module hfrisc_soc
         .gpiob_ddr(gpiob_ddr)
     );
 
-    // VGA Interface
-    assign data_read_vga = {data_read_vga_s[7:0], data_read_vga_s[15:8], 
+    //========================================================================
+    // VGA Controller Interface
+    //========================================================================
+    assign data_read_vga = {data_read_vga_s[7:0], data_read_vga_s[15:8],
                             data_read_vga_s[23:16], data_read_vga_s[31:24]};
 
     if_vga vga_core
@@ -256,11 +300,13 @@ module hfrisc_soc
         .blue(blue)
     );
 
-    // PS/2 / AXIS Interface
-    assign data_read_axis = {data_read_axis_s[7:0], data_read_axis_s[15:8], 
+    //========================================================================
+    // PS/2 Keyboard via AXI Stream Interface
+    //========================================================================
+    assign data_read_axis = {data_read_axis_s[7:0], data_read_axis_s[15:8],
                              data_read_axis_s[23:16], data_read_axis_s[31:24]};
-    assign reset_n = ~reset;
 
+    // AXI Stream CPU Interface
     if_axis if_axis_core1
     (
         .addr_i(address),
@@ -274,6 +320,7 @@ module hfrisc_soc
         .s_axis_tdata_i(m_axis_tdata_s)
     );
 
+    // PS/2 Keyboard to AXI Stream Bridge
     kbd_axis kbd_axis
     (
         .ps2_clk_i(PS2_CLK),
@@ -285,7 +332,9 @@ module hfrisc_soc
         .m_axis_tdata_o(m_axis_tdata_s)
     );
 
-    // Boot RAM
+    //========================================================================
+    // Boot ROM (4KB)
+    //========================================================================
     ram #()
     boot_ram
     (
@@ -293,11 +342,13 @@ module hfrisc_soc
         .enable(boot_enable),
         .write_byte_enable(4'b0000),
         .address(address[11:2]),
-        .data_write(),
+        .data_write(32'h00000000),
         .data_read(data_read_boot)
     );
-    
-    // Main RAM
+
+    //========================================================================
+    // Main BRAM (Size defined by address_width parameter)
+    //========================================================================
     bram #()
     bram
     (

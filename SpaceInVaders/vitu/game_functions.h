@@ -1,7 +1,7 @@
 #ifndef GAME_ENGINE_H
 #define GAME_ENGINE_H
 
-#include <hf-risc.h>
+#include "/home/be/Work/hf-risc/software/include/hf-risc.h"
 #include "vga_drv.h"
 
 struct object_s {
@@ -39,5 +39,7 @@ void init_input(void);
 int get_input(void);
 
 int detect_collision(struct object_s *obj1, struct object_s *obj2);
+
+void control_player(struct object_s *player);
 
 #endif
