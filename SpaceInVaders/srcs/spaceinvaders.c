@@ -174,9 +174,13 @@ int main(void)
 	init_input();
 
 	init_object(&enemy1, alien2a[0], alien2b[0], 0, 11, 8, 30, 35, 1, 1, 3, 3);
-    init_object(&enemy2, alien_medium_a[0], alien_medium_b[0], 0, 11, 8, 40, 80, -1, 1, 5, 3);
+    
+	init_object(&enemy2, alien_medium_a[0], alien_medium_b[0], 0, 11, 8, 40, 80, -1, 1, 5, 3);
+	
 	init_object(&enemy3, alien_strong_a[0], alien_strong_b[0], 0, 11, 8, 15, 80, -1, 1, 5, 3);
+	
 	init_object(&player, spaceship[0], spaceship[0], 0, 11, 8, 170, 160, -1, 0, PLAYER_SPEED, PLAYER_SPEED);
+	
 	init_object(&bullet_obj, bullet[0], bullet[0], 0, 3, 5, player.posx + 4, player.posy, 0, -1, -3, -3);
 	
 	

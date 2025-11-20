@@ -57,25 +57,30 @@ void move_object(struct object_s *obj)
 	
 	memcpy(&oldobj, obj, sizeof(struct object_s));
 	
-	if (--obj->speedxcnt == 0) {
+	// Speed negativo = move múltiplos pixels por frame
+	if (obj->speedx < 0) {
+		obj->posx = obj->posx + (obj->dx * (-obj->speedx));
+		if (obj->posx + obj->spriteszx >= VGA_WIDTH || obj->posx <= 0) obj->dx = -obj->dx;
+	} else if (--obj->speedxcnt == 0) {
 		obj->speedxcnt = obj->speedx;
 		obj->posx = obj->posx + obj->dx;
-
 		if (obj->posx + obj->spriteszx >= VGA_WIDTH || obj->posx <= 0) obj->dx = -obj->dx; 
 	}
-	if (--obj->speedycnt == 0) {
+	
+	if (obj->speedy < 0) {
+		obj->posy = obj->posy + (obj->dy * (-obj->speedy));
+		if (obj->posy + obj->spriteszy >= VGA_HEIGHT || obj->posy <= 0) obj->dy = -obj->dy;
+	} else if (--obj->speedycnt == 0) {
 		obj->speedycnt = obj->speedy;
 		obj->posy = obj->posy + obj->dy;
-
 		if (obj->posy + obj->spriteszy >= VGA_HEIGHT || obj->posy <= 0) obj->dy = -obj->dy;
 	}
 
-	if ((obj->speedx == obj->speedxcnt) || (obj->speedy == obj->speedycnt)) {
+	if ((obj->speedx == obj->speedxcnt) || (obj->speedy == obj->speedycnt) || (obj->speedx < 0) || (obj->speedy < 0)) {
 		draw_object(&oldobj, 0, 0);
 		draw_object(obj, 1, -1);
 	}
 }
-
 
 /* display and input */
 void init_display()
