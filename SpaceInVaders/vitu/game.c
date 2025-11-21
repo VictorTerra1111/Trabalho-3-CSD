@@ -1,47 +1,29 @@
 #include "game_functions.h"
 #include "game_sprites.h"
 
-// func display_print() -- Acho que vem do vga_drv.h
-// 0, 0, 0, color		--  x, y, size, color    (0, 0) = top left corner
-
-
-// ======================
-// Variaveis de ambiente
-// ======================
-
-// Configuração de velocidade do player
-// Valores positivos = frames por movimento (2=médio, 3=lento); Valor 1 = move 1 pixel por frame (rápido); Valores negativos = pixels por frame (-2=muito rápido, move 2 pixels por frame)
 int PLAYER_SPEED = -2;
 
-int main(void)
+int main()
 {
 	int score = 0;
 	int i, j;
 	
-	struct object_s enemies[5][10];  // 5 fileiras de 10 inimigos
-	struct object_s p1, sh1, sh2, sh3, sh4, bullet;
+	struct object_s en1[5][10], en2[5][10], en3[5][10];
+	struct object_s pl, sh1, sh2, sh3, sh4;
 	struct object_s nave_mae;
 
 	init_display();
 	init_input();
 
-	// criar 5 fileiras de 10 enemies (alien2a)
 	for (i = 0; i < 5; i++) {
 		for (j = 0; j < 10; j++) {
-			init_object(&enemies[i][j], &alien_medium_a[0][0], &alien_medium_b[0][0], 0, 
-			            11, 8, 10 + j * 25, 20 + i * 15, 1, 0, 3, 3);
-		}
-	}
-	
-	for (i = 0; i < 2; i++) {
-		for (j = 0; j < 10; j++) {
-			init_object(&enemies[i][j], &alien_strong_a[0][0], &alien_strong_b[0][0], 0, 
+			init_object(&en1[i][j], &monster1_an1[0][0], &monster1_an2[0][0], 0, 
 			            11, 8, 10 + j * 25, 20 + i * 15, 1, 0, 3, 3);
 		}
 	}
 
 	// player
-	init_object(&p1, &spaceship[0][0], 0, 0, 11, 8, 120, 180, 0, 0, PLAYER_SPEED, PLAYER_SPEED);
+	init_object(&pl, &player[0][0], 0, 0, 11, 8, 120, 180, 0, 0, PLAYER_SPEED, PLAYER_SPEED);
 	
 	// all four shields 
 	init_object(&sh1, &shield[0][0], 0, 0, 20, 10,  40, 150, 0, 0, 1, 1);
@@ -55,17 +37,14 @@ int main(void)
 	init_object(&nave_mae, &big_guy[0][0], 0, 0, 30, 10, 0, 10, 1, 0, 5, 1);
 
 
-	display_print("ROUND 1", 0, 0, 1, RED);
+	display_print("score ", 0, 0, 1, RED);
 
 	while (1) {
-		// mover todos os inimigos
 		for (i = 0; i < 2; i++) {
 			for (j = 0; j < 10; j++) {
 				move_object(&enemies[i][j]);
 			}
 		}
-	
-	
 		
 		move_object(&sh1);
 		move_object(&sh2);
