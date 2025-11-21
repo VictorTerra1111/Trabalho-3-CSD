@@ -40,6 +40,15 @@ int main()
 	display_print("score ", 0, 0, 1, RED);
 
 	while (1) {
+
+		if (score++) {
+    display_frectangle(40, 0, 80, 10, BLACK);
+    char buf[20];
+    sprintf(buf, "%d", score);
+    for (int i = 0; buf[i] != '\0'; i++) {
+        display_char(buf[i], 10, 0, 1, RED);
+    }
+}
 		for (i = 0; i < 2; i++) {
 			for (j = 0; j < 10; j++) {
 				move_object(&enemies[i][j]);
@@ -51,10 +60,10 @@ int main()
 		move_object(&sh3);
 		move_object(&sh4);
 		move_object(&nave_mae);
-		move_object(&p1);
+		move_object(&pl);
 		
 
-		control_player(&p1);
+		control_player(&pl);
 		
 
 		if (get_input() == KEY_UP) {
@@ -64,13 +73,6 @@ int main()
 		//if (detect_collision(&enemy1, &enemy2)) display_print("collision: 1 and 2", 0, 180, 1, CYAN);
 		//if (detect_collision(&enemy1, &enemy3)) display_print("collision: 1 and 3", 0, 180, 1, CYAN);
 		//if (detect_collision(&enemy2, &enemy3)) display_print("collision: 2 and 3", 0, 180, 1, CYAN);
-		
-		/*if(score ++){
-			display_frectangle(0, 0, 80, 10, BLACK);
-		char buffer[20];
-		sprintf(buffer, "%d", score);
-		display_print(buffer, 0, 0, 1, RED);
-		*/
 
 
 		delay_ms(50);
