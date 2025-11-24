@@ -8,6 +8,7 @@ struct object_s {
     char *sprite_frame[3];
     char spriteszx, spriteszy, sprites;
     int cursprite;
+    char alive;
     unsigned int posx, posy;
     int dx, dy;
     int speedx, speedy;
@@ -44,4 +45,7 @@ int detect_collision(struct object_s *obj1, struct object_s *obj2);
 void control_player(struct object_s *player);
 
 void int_to_string(int value, char *str);
+
+
+void reset_bullet(struct object_s *b);
 #endif

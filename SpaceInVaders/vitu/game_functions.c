@@ -29,6 +29,7 @@ void init_object(struct object_s *obj, char *spritea, char *spriteb,
 	obj->spriteszx = spriteszx;
 	obj->spriteszy = spriteszy;
 	obj->cursprite = 0;
+	obj->alive = 1;
 	obj->posx = posx;
 	obj->posy = posy;
 	obj->dx = dx;
@@ -110,6 +111,7 @@ int get_input()
 
 int detect_collision(struct object_s *obj1, struct object_s *obj2)
 {
+	if (!obj1->alive || !obj2->alive) return 0;
 	if (obj1->posx < obj2->posx + obj2->spriteszx &&
 		obj1->posx + obj1->spriteszx > obj2->posx &&
 		obj1->posy < obj2->posy + obj2->spriteszy &&
@@ -175,3 +177,8 @@ void control_player(struct object_s *player){
 
 	}
 
+void reset_bullet(struct object_s *b) {
+    draw_object(b, 0, 0);     // apaga onde está
+    b->alive = 0;
+    b->posy = VGA_HEIGHT;
+}
