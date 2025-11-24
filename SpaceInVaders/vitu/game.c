@@ -47,6 +47,17 @@ int main()
 		}
 	}
 
+	/* Desenhar todos os inimigos inicializados e garantir alive=1 */
+	for (j = 0; j < 10; j++) {
+		if (en3[0][j].alive) draw_object(&en3[0][j], 1, -1);
+	}
+	for (i = 0; i < 2; i++) {
+		for (j = 0; j < 10; j++) {
+			if (en2[i][j].alive) draw_object(&en2[i][j], 1, -1);
+			if (en1[i][j].alive) draw_object(&en1[i][j], 1, -1);
+		}
+	}
+
 	// player
 	init_object(&pl, &player[0][0], 0, 0, 11, 8, 120, 180, 0, 0, PLAYER_SPEED, PLAYER_SPEED);
 	
@@ -238,7 +249,8 @@ int main()
 		if (get_input() == KEY_UP) {
 			if (!bullet_active && reload_timer == 0) {
 				bullet_active = 1;
-				bu.posx = pl.posx; + (pl.spriteszx > bu.spriteszx ? (pl.spriteszx - bu.spriteszx) / 2 : 0);
+				/* Centraliza o tiro na nave */
+				bu.posx = pl.posx + (pl.spriteszx > bu.spriteszx ? (pl.spriteszx - bu.spriteszx) / 2 : 0);
 				bu.posy = pl.posy - bu.spriteszy;
 				bu.alive = 1;
 				draw_object(&bu, 1, -1); // desenha inicialmente

@@ -112,10 +112,12 @@ int get_input()
 int detect_collision(struct object_s *obj1, struct object_s *obj2)
 {
 	if (!obj1->alive || !obj2->alive) return 0;
-	if (obj1->posx < obj2->posx + obj2->spriteszx &&
-		obj1->posx + obj1->spriteszx > obj2->posx &&
-		obj1->posy < obj2->posy + obj2->spriteszy &&
-		obj1->posy + obj1->spriteszy > obj2->posy) return 1;
+	/* Considerar também o caso em que as bordas tocam exatamente
+	   (encostar deve contar como colisão). Trocar < e > por <= e >=. */
+	if (obj1->posx <= obj2->posx + obj2->spriteszx &&
+		obj1->posx + obj1->spriteszx >= obj2->posx &&
+		obj1->posy <= obj2->posy + obj2->spriteszy &&
+		obj1->posy + obj1->spriteszy >= obj2->posy) return 1;
 
 	return 0;
 }

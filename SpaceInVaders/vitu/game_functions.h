@@ -46,6 +46,9 @@ void control_player(struct object_s *player);
 
 void int_to_string(int value, char *str);
 
+void bullet(structstruct object_s *b);
 
 void reset_bullet(struct object_s *b);
+
+
 #endif
