@@ -1,9 +1,7 @@
 #include "game_functions.h"
 #include "game_sprites.h"
-#define BULLET_POOL 8
 
 int PLAYER_SPEED = -2;
-
 
 int main()
 {
@@ -73,9 +71,8 @@ int main()
 	init_object(&sh4, &shield[0][0], 0, 0, 20, 10, 220, 150, 0, 0, 1, 1);
 
 	
-	/* Inicializar bullet do player (inativo inicialmente) */
+	/* bullet: pos off-screen, dy = -1 (up), speedy = -2 (moves 2 px/frame) */
 	init_object(&bu, &bullet[0][0], 0, 0, 1, 2, pl.posx, pl.posy, 0, -1, 0, -10);
-	reset_bullet(&bu);
 
 	display_print("score:  ", 0, 0, 1, WHITE);
 
@@ -248,60 +245,73 @@ int main()
 		control_player(&pl);
 		// DECLARACAO ESCUDOS
 
-		if (get_input() == KEY_UP) {
-			if (!bu.alive && reload_timer == 0) {
-				int offx = (pl.spriteszx > bu.spriteszx ? (pl.spriteszx - bu.spriteszx) / 2 : 0);
-				spawn_bullet(&pl, &bu, offx, -bu.spriteszy, 0, -1, 0, -10);
-				reload_timer = 8;
-			}
-		}
 		
+		if (get_input() == KEY_UP) {
+			if (!bullet_active && reload_timer == 0) {
+				bullet_active = 1;
+				/* Centraliza o tiro na nave */
+				bu.posx = pl.posx + (pl.spriteszx > bu.spriteszx ? (pl.spriteszx - bu.spriteszx) / 2 : 0);
+				bu.posy = pl.posy - bu.spriteszy;
+				bu.alive = 1;
+				draw_object(&bu, 1, -1); // desenha inicialmente
+    		}
+		}
+
 		if (reload_timer > 0) reload_timer--;
 		
-		if (bu.alive) {
-			move_object(&bu);
+
+		if (bullet_active) {
+			int old_bu_posy = bu.posy;
+			move_object(&bu); // usa dx/dy e speed para mover e redesenhar
 			if (bu.posy + bu.spriteszy <= 0) {
 				reset_bullet(&bu);
+				bullet_active = 0;
 			} else {
 				/* colisão com inimigos (en1,en2,en3) */
-				for (i = 0; i < 2 && bu.alive; i++) {
-					for (j = 0; j < 10 && bu.alive; j++) {
-						if (en1[i][j].alive && detect_collision(&bu, &en1[i][j])) {
-							draw_object(&en1[i][j], 0, 0);
-							en1[i][j].alive = 0;
+				for (i = 0; i < 2 && bullet_active; i++) {
+					for (j = 0; j < 10 && bullet_active; j++) {
+						if (detect_collision(&bu, &en1[i][j])) {
+							draw_object(&en1[i][j], 0, 0); // apagar
 							reset_bullet(&bu);
+							en1[i][j].alive = 0;
+							bullet_active = 0;
 							score++;
 							break;
 						}
-						if (en2[i][j].alive && detect_collision(&bu, &en2[i][j])) {
+						if (detect_collision(&bu, &en2[i][j])) {
 							draw_object(&en2[i][j], 0, 0);
 							en2[i][j].alive = 0;
 							reset_bullet(&bu);
+							bullet_active = 0;
+							//bu.posy = VGA_HEIGHT + 3;
 							score++;
 							break;
 						}
 					}
 				}
-				for (j = 0; j < 10 && bu.alive; j++) {
-					if (en3[0][j].alive && detect_collision(&bu, &en3[0][j])) {
+				for (j = 0; j < 10 && bullet_active; j++) {
+					if (detect_collision(&bu, &en3[0][j])) {
 						en3[0][j].alive = 0;
 						draw_object(&en3[0][j], 0, 0);
 						reset_bullet(&bu);
+						bullet_active = 0;
+						//bu.posy = VGA_HEIGHT;
 						score++;
 						break;
 					}
 				}
 			}
 		}
-	
-	delay_ms(50);
-	
-}
+		
 
-init_display();
+		delay_ms(50);
 
-char score_final[20];
-int_to_string(score, score_final);
+	}
+
+	init_display();
+
+	char score_final[20];
+	int_to_string(score, score_final);
 
 	display_frectangle(0, 100, VGA_WIDTH, 40, BLACK);
 	display_print("Game Over", 30, 90, 3, WHITE);
