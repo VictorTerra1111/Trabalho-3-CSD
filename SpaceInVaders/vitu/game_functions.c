@@ -180,28 +180,47 @@ void control_player(struct object_s *player){
 	}
 
 void reset_bullet(struct object_s *b) {
-    draw_object(b, 0, 0);     // apaga onde está
-    b->alive = 0;
-    b->posy = VGA_HEIGHT;
+	// Apaga a área do sprite 
+	display_frectangle(b->posx, b->posy, b->spriteszx, b->spriteszy, BLACK);
+	b->alive = 0;
+	b->posy = VGA_HEIGHT;
 }
 
-void spawn_bullet(struct object_s *owner, struct object_s *b, int offsetx, int offsety, int dx, int dy, int spx, int spy) {
-	/* Ativa e posiciona o bullet `b` relativo ao `owner`.
-	   Presume que `b->sprite_frame` e dimensões já foram configuradas
-	   (por exemplo com `init_object`). */
-	/* apagar qualquer rastro anterior */
-	draw_object(b, 0, 0);
+/* enemy_shoot: ativa uma bala livre do pool abaixo de um inimigo escolhido.
+   Assinatura pública está em game_functions.h */
+void enemy_shoot(struct object_s *ebuf, int max_eb, struct object_s EN1[][10], struct object_s EN2[][10], struct object_s EN3[][10]) {
+	/* LCG local para geração simples */
+	static unsigned int s = 0x87654321u;
+	s = s * 1103515245u + 12345u;
+	int col = s % 10;
 
-	b->posx = owner->posx + offsetx;
-	b->posy = owner->posy + offsety;
-	b->dx = dx;
-	b->dy = dy;
-	b->speedx = spx;
-	b->speedy = spy;
-	b->speedxcnt = spx;
-	b->speedycnt = spy;
-	b->alive = 1;
+	struct object_s *shooter = NULL;
+	for (int attempt = 0; attempt < 10 && !shooter; attempt++) {
+		int c = (col + attempt) % 10;
+		if (EN1[1][c].alive) shooter = &EN1[1][c];
+		else if (EN1[0][c].alive) shooter = &EN1[0][c];
+		else if (EN2[1][c].alive) shooter = &EN2[1][c];
+		else if (EN2[0][c].alive) shooter = &EN2[0][c];
+		else if (EN3[0][c].alive) shooter = &EN3[0][c];
+	}
+	if (!shooter) return;
 
-	draw_object(b, 1, -1);
+	for (int k = 0; k < max_eb; k++) {
+		if (!ebuf[k].alive) {
+			ebuf[k].posx = shooter->posx + (shooter->spriteszx > ebuf[k].spriteszx ? (shooter->spriteszx - ebuf[k].spriteszx) / 2 : 0);
+			ebuf[k].posy = shooter->posy + shooter->spriteszy;
+			ebuf[k].alive = 1;
+			ebuf[k].dx = 0;
+			ebuf[k].dy = 1;
+			ebuf[k].speedy = -4;
+			draw_object(&ebuf[k], 1, -1);
+			return;
+		}
+	}
 }
+
+
+
+
+
 
