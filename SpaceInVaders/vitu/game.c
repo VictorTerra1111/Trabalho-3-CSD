@@ -36,14 +36,14 @@ int main()
 
 	init_object(&sh4, &shield[0][0], 0, 0, 20, 10, 220, 150, 0, 0, 1, 1);
 
-	init_object(&nave_mae, &big_guy[0][0], 0, 0, 30, 10, 0, 10, 1, 0, 5, 1);
+	init_object(&nave_mae, &mothership[0][0], 0, 0, 30, 10, 0, 10, 1, 0, 5, 1);
 
 
 	display_print("ROUND 1", 0, 0, 1, RED);
 
 	while (1) {
 		if (score++) {
-			display_frectangle(40, 0, 80, 10, BLACK);
+			display_frectangle(40, 0, 80, 10, RED);
 			char buf[20];
 			sprintf(buf, "%d", score);
 			for (int i = 0; buf[i] != '\0'; i++) {
@@ -52,7 +52,9 @@ int main()
 		}	
 		for (i = 0; i < 2; i++) {
 			for (j = 0; j < 10; j++) {
-				move_object(&enemies[i][j]);
+				move_object(&en1[i][j]);
+				move_object(&en2[i][j]);
+				move_object(&en3[i][j]);
 			}
 		}
 		
