@@ -46,7 +46,12 @@ void control_player(struct object_s *player);
 
 void int_to_string(int value, char *str);
 
-void bullet(structstruct object_s *b);
+/* Spawn a bullet `b` relative to `owner`.
+    offsetx/offsety: placement offset from owner's pos (pixels)
+    dx/dy: direction vector (e.g. 0,-1 for up)
+    spx/spy: speed values (use negative to move multiple pixels/frame)
+*/
+void spawn_bullet(struct object_s *owner, struct object_s *b, int offsetx, int offsety, int dx, int dy, int spx, int spy);
 
 void reset_bullet(struct object_s *b);
 

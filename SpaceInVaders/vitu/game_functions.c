@@ -184,3 +184,24 @@ void reset_bullet(struct object_s *b) {
     b->alive = 0;
     b->posy = VGA_HEIGHT;
 }
+
+void spawn_bullet(struct object_s *owner, struct object_s *b, int offsetx, int offsety, int dx, int dy, int spx, int spy) {
+	/* Ativa e posiciona o bullet `b` relativo ao `owner`.
+	   Presume que `b->sprite_frame` e dimensões já foram configuradas
+	   (por exemplo com `init_object`). */
+	/* apagar qualquer rastro anterior */
+	draw_object(b, 0, 0);
+
+	b->posx = owner->posx + offsetx;
+	b->posy = owner->posy + offsety;
+	b->dx = dx;
+	b->dy = dy;
+	b->speedx = spx;
+	b->speedy = spy;
+	b->speedxcnt = spx;
+	b->speedycnt = spy;
+	b->alive = 1;
+
+	draw_object(b, 1, -1);
+}
+
