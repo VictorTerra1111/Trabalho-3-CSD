@@ -3,12 +3,15 @@
 
 int PLAYER_SPEED = -2;
 int SCORE_ATUAL = 0;
-int SCORE = 1;
+int SCORE = 0;
 int ATTEMPT_COUNT = 1;
 int i, j;
-int VIDA = 1;
-int VIDA_ATUAL = 1;
+int VIDA = 3;
+int VIDA_ATUAL = 3;
 int VIDA_MAX = 8;
+
+// Quando score chegar nesse valor, encerra o jogo com vitória
+int WIN_SCORE = 10;
 
 // grace frames to avoid immediate collision checks at startup
 int START_GRACE = 3;
@@ -127,13 +130,13 @@ int main()
 
 	// Print da vida
 	draw_sprite(50, 200, &life[0][0], 11, 8, -1);
-	display_print("1", 65, 200, 1, WHITE);
-	
+	display_print("3", 65, 200, 1, WHITE);
+
 	//========================//
 	// LOOP PRINCIPAL DO JOGO //
 	//========================//
 
-		while (!GAME_OVER)
+		while (!GAME_OVER && !WIN )
 		{
 			//=====================//
 			// STATUS SUPERIOR//
@@ -406,6 +409,10 @@ int main()
 								EN1[i][j].alive = 0;
 								BULLET_ACTIVE = 0;
 								SCORE++;
+								if (SCORE >= WIN_SCORE)
+								{
+									WIN = 1;
+								}
 								break;
 							}
 							if (detect_collision(&BU, &EN2[i][j]))
@@ -415,6 +422,10 @@ int main()
 								reset_bullet(&BU);
 								BULLET_ACTIVE = 0;
 								SCORE++;
+								if (SCORE >= WIN_SCORE)
+								{
+									WIN = 1;
+								}
 								break;
 							}
 							if (detect_collision(&BU, &EN3[0][j]))
@@ -424,6 +435,10 @@ int main()
 								reset_bullet(&BU);
 								BULLET_ACTIVE = 0;
 								SCORE++;
+								if (SCORE >= WIN_SCORE)
+								{
+									WIN = 1;
+								}
 								break;
 							}
 							/* colisão com escudos */
@@ -486,55 +501,97 @@ int main()
 				// Reinicia contagem
 				ENEMY_BULLET = ENEMY_BULLET_TIMER;
 			}
+
+
+
+
 			delay_ms(50);
 		}
 
-		init_display();
 
-		char SCORE_final[20];
-		int_to_string(SCORE, SCORE_final);
+		// ===========================
+		// Se derrota
+		// ==========================
+		if(GAME_OVER){
+			init_display();
 
-		char ATTEMPT_COUNT_str[20];
-		int_to_string(ATTEMPT_COUNT, ATTEMPT_COUNT_str);
+			char SCORE_final[20];
+			int_to_string(SCORE, SCORE_final);
 
-		display_frectangle(0, 100, VGA_WIDTH, 40, BLACK);
-		display_print("Game Over", 40, 90, 3, WHITE);
-		display_print("SCORE", 120, 125, 1, WHITE);
-		display_print(SCORE_final, 170, 125, 1, WHITE);
-		display_print("ATTEMPT:", 115, 140, 1, WHITE);
-		display_print(ATTEMPT_COUNT_str, 185, 140, 1, WHITE);
+			char ATTEMPT_COUNT_str[20];
+			int_to_string(ATTEMPT_COUNT, ATTEMPT_COUNT_str);
 
-		while (!RESTART_REQUESTED)
-		{
-			display_print("Press UP_BUTTON key to restart", 35, 160, 1, WHITE);
-			if (get_input() == KEY_UP)
+			display_frectangle(0, 100, VGA_WIDTH, 40, BLACK);
+			display_print("Game Over", 40, 90, 3, WHITE);
+			display_print("SCORE", 120, 125, 1, WHITE);
+			display_print(SCORE_final, 170, 125, 1, WHITE);
+			display_print("ATTEMPT:", 115, 140, 1, WHITE);
+			display_print(ATTEMPT_COUNT_str, 185, 140, 1, WHITE);
+
+			while (!RESTART_REQUESTED)
 			{
-				RESTART_REQUESTED = 1;
+				display_print("Press UP_BUTTON key to restart", 35, 160, 1, WHITE);
+				if (get_input() == KEY_UP)
+				{
+					RESTART_REQUESTED = 1;
+				}
 			}
-		}
-		if (RESTART_REQUESTED)
-		{
-			// reseta variáveis de controle
-			display_background(BLACK);
-			ATTEMPT_COUNT++;
-			PLAYER_SPEED = -2;
-			SCORE_ATUAL = 0;
-			SCORE = 0;
-			VIDA = 1;
-			VIDA_ATUAL = 1;
-			START_GRACE = 3;
-			ENEMY_BULLET_TIMER = 20;
-			ENEMY_BULLET = 0;
-			BULLET_ACTIVE = 0;
-			RELOAD_TIMER = 0;
-			GAME_OVER = 0;
-			RESTART_REQUESTED = 0;
-			ENEMIE_DIRECTION = 1;
-			MOVE_DOWN = 0;
-			FRAME_COUNT = 0;
+			if (RESTART_REQUESTED)
+			{
+				// reseta variáveis de controle
+				display_background(BLACK);
+				ATTEMPT_COUNT++;
+				PLAYER_SPEED = -2;
+				SCORE_ATUAL = 0;
+				SCORE = 0;
+				VIDA = 1;
+				VIDA_ATUAL = 1;
+				START_GRACE = 3;
+				ENEMY_BULLET_TIMER = 20;
+				ENEMY_BULLET = 0;
+				BULLET_ACTIVE = 0;
+				RELOAD_TIMER = 0;
+				GAME_OVER = 0;
+				RESTART_REQUESTED = 0;
+				ENEMIE_DIRECTION = 1;
+				MOVE_DOWN = 0;
+				FRAME_COUNT = 0;
+			}
+
+			// chama a main loop recursivamente
+			main();
 		}
 
-		// chama a main loop recursivamente
-		main();
+		// ===========================
+		// Se vitória
+		// ==========================
+		if(WIN){
+			init_display();
+			display_print("You Win!", 40, 90, 3, WHITE);
+
+			delay_ms(5000);
+			display_background(BLACK);
+				ATTEMPT_COUNT++;
+				PLAYER_SPEED = -2;
+				SCORE_ATUAL = 0;
+				SCORE = 0;
+				VIDA = 1;
+				VIDA_ATUAL = 1;
+				START_GRACE = 3;
+				ENEMY_BULLET_TIMER = 20;
+				ENEMY_BULLET = 0;
+				BULLET_ACTIVE = 0;
+				RELOAD_TIMER = 0;
+				GAME_OVER = 0;
+				RESTART_REQUESTED = 0;
+				ENEMIE_DIRECTION = 1;
+				MOVE_DOWN = 0;
+				FRAME_COUNT = 0;
+				WIN = 0;
+
+			// chama a main loop recursivamente
+			main();
+		}
+
 	return 0;
 }
