@@ -10,6 +10,8 @@ int main()
 	int vida_atual = 3;
 	int vida_max = 8;
 
+	bool game_over = false;
+
 	struct object_s en1[5][10], en2[5][10], en3[5][10];
 	struct object_s pl, sh1, sh2, sh3, sh4;
 	struct object_s nave_mae;
@@ -36,20 +38,37 @@ int main()
 
 	init_object(&sh4, &shield[0][0], 0, 0, 20, 10, 220, 150, 0, 0, 1, 1);
 
-	init_object(&nave_mae, &big_guy[0][0], 0, 0, 30, 10, 0, 10, 1, 0, 5, 1);
+	init_object(&nave_mae, &mothership[0][0], 0, 0, 30, 10, 0, 10, 1, 0, 5, 1);
 
 
-	display_print("ROUND 1", 0, 0, 1, RED);
+	display_print("score ", 0, 0, 1, RED);
 
-	while (1) {
+	while (!game_over) {
 		if (score++) {
 			display_frectangle(40, 0, 80, 10, BLACK);
 			char buf[20];
-			sprintf(buf, "%d", score);
+			display_print(buf, "%d", score);
 			for (int i = 0; buf[i] != '\0'; i++) {
 				display_char(buf[i], 10, 0, 1, RED);
 			}
 		}	
+
+
+		if(detect_collision(&pl, &en1) || detect_collision(&pl, &en2) || detect_collision(&pl, &en3)){
+			game_over = true;
+			break;
+		}
+
+		if(detect_collision(&pl, &bullet)){
+			if(vida_atual > 1){
+				vida_atual = vida_atual - 1;
+			}
+			else{
+				game_over = true;
+				break;
+			}
+		}
+
 		for (i = 0; i < 2; i++) {
 			for (j = 0; j < 10; j++) {
 				move_object(&enemies[i][j]);
@@ -78,5 +97,10 @@ int main()
 		delay_ms(50);
 	}
 
+	display_print("Game over", 0, 0, 3, WHITE);
+	display_print("SCORE", 5, 5, 1, WHITE);
+	display_print(score, 5, 7, WHITE);
+	
+	
 	return 0;
 }
