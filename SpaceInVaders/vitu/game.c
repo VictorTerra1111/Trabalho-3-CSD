@@ -7,7 +7,9 @@ int main()
 {
 	int score = 0;
 	int i, j;
-	
+	int vida_atual = 3;
+	int vida_max = 8;
+
 	struct object_s en1[5][10], en2[5][10], en3[5][10];
 	struct object_s pl, sh1, sh2, sh3, sh4;
 	struct object_s nave_mae;
@@ -40,15 +42,14 @@ int main()
 	display_print("score ", 0, 0, 1, RED);
 
 	while (1) {
-
 		if (score++) {
-    display_frectangle(40, 0, 80, 10, BLACK);
-    char buf[20];
-    sprintf(buf, "%d", score);
-    for (int i = 0; buf[i] != '\0'; i++) {
-        display_char(buf[i], 10, 0, 1, RED);
-    }
-}
+			display_frectangle(40, 0, 80, 10, BLACK);
+			char buf[20];
+			sprintf(buf, "%d", score);
+			for (int i = 0; buf[i] != '\0'; i++) {
+				display_char(buf[i], 10, 0, 1, RED);
+			}
+		}	
 		for (i = 0; i < 2; i++) {
 			for (j = 0; j < 10; j++) {
 				move_object(&enemies[i][j]);
@@ -65,7 +66,6 @@ int main()
 
 		control_player(&pl);
 		
-
 		if (get_input() == KEY_UP) {
 			//move_object(&bullet_obj);
 		}
