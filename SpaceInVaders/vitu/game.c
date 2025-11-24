@@ -1,9 +1,9 @@
 #include "game_functions.h"
 #include "game_sprites.h"
+#define BULLET_POOL 8
 
 int PLAYER_SPEED = -2;
 
-#define BULLET_POOL 8
 
 int main()
 {
