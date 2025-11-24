@@ -131,3 +131,47 @@ void control_player(struct object_s *player){
 		player->dx = 0;
 	}
 }
+
+	void int_to_string(int num, char *str) {
+    int i = 0;
+    int is_negative = 0;
+    
+    // Tratar zero
+    if (num == 0) {
+        str[0] = '0';
+        str[1] = '\0';
+        return;
+    }
+    
+    // Tratar negativos
+    if (num < 0) {
+        is_negative = 1;
+        num = -num;
+    }
+    
+    // Converter dígitos (ordem reversa)
+    while (num != 0) {
+        str[i++] = (num % 10) + '0';
+        num = num / 10;
+    }
+    
+    // Adicionar sinal negativo
+    if (is_negative) {
+        str[i++] = '-';
+    }
+    
+    str[i] = '\0';
+    
+    // Inverter string
+    int start = 0;
+    int end = i - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
+
+	}
+

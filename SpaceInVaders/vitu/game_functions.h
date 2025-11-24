@@ -43,4 +43,5 @@ int detect_collision(struct object_s *obj1, struct object_s *obj2);
 
 void control_player(struct object_s *player);
 
+void int_to_string(int value, char *str);
 #endif
