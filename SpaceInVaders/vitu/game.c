@@ -56,7 +56,8 @@ int main(void)
 
 
 	display_print("ROUND 1", 0, 0, 1, RED);
-
+	display _print("SCORE:", score, 0, 1, RED);
+	display_print("Lives: ", lives,)
 	while (1) {
 		// mover todos os inimigos
 		for (i = 0; i < 2; i++) {

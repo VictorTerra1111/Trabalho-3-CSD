@@ -36,6 +36,7 @@ void move_object(struct object_s *obj);
 void init_display(void);
 
 void init_input(void);
+
 int get_input(void);
 
 int detect_collision(struct object_s *obj1, struct object_s *obj2);
