@@ -16,7 +16,12 @@ extern char life[8][11];
 
 extern char mothership[10][30];
 
-extern char shield[10][20];
+extern char shieldG[15][32];
+
+extern char shieldLG[15][32];
+extern char shieldY[15][32];
+extern char shieldLY[15][32];
+extern char shieldR[15][32];
 
 extern char bullet[2][1];
 

@@ -58,7 +58,7 @@ void int_to_string(int value, char *str);
 void spawn_bullet(struct object_s *owner, struct object_s *b, int offsetx, int offsety, int dx, int dy, int spx, int spy);
 
 void reset_bullet(struct object_s *b);
-
+void reset_shield(struct object_s *s);
 
 /* Faz um inimigo atirar usando um pool de bullets fornecido.
     ebuf: ponteiro para array de bullets

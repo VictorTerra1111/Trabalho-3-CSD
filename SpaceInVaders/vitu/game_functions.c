@@ -47,8 +47,41 @@ void draw_object(struct object_s *obj, char chgsprite, int color)
 		if (obj->sprite_frame[obj->cursprite] == 0)
 			obj->cursprite = 0;
 	}
-	
-	draw_sprite(obj->posx, obj->posy, obj->sprite_frame[obj->cursprite],
+
+	/* Select sprite to draw. For shields we have multiple color variants
+	   defined in game_sprites.h (shieldG, shieldLG, shieldY, shieldLY, shieldR).
+	   When game calls draw_object(..., color) with one of those color codes,
+	   replace the sprite pointer so the visual matches the chosen color.
+	   Keep behavior for erase/fill when color >= 0. */
+	char *sprite_to_draw = obj->sprite_frame[obj->cursprite];
+
+	/* Detect shields by comparing the sprite pointer to the base green shield.
+	   If the object was initialized with `&shieldG[0][0]` use color to pick
+	   the appropriate variant sprite. */
+	if (sprite_to_draw == &shieldG[0][0]) {
+		if (color == LGREEN) {
+			sprite_to_draw = &shieldLG[0][0];
+			color = -1; /* draw using sprite data */
+		} else if (color == YELLOW) {
+			sprite_to_draw = &shieldY[0][0];
+			color = -1;
+		} else if (color == LYELLOW) {
+			sprite_to_draw = &shieldLY[0][0];
+			color = -1;
+		} else if (color == RED) {
+			sprite_to_draw = &shieldR[0][0];
+			color = -1;
+		} else if (color == BLACK) {
+			/* erase: draw filled black rectangle */
+			display_frectangle(obj->posx, obj->posy, obj->spriteszx, obj->spriteszy, BLACK);
+			return;
+		} else if (color < 0) {
+			/* keep base sprite data (shieldG) */
+			color = -1;
+		}
+	}
+
+	draw_sprite(obj->posx, obj->posy, sprite_to_draw,
 		obj->spriteszx, obj->spriteszy, color);
 }
 
@@ -61,11 +94,28 @@ void move_object(struct object_s *obj)
 	// Speed negativo = move múltiplos pixels por frame
 	if (obj->speedx < 0) {
 		obj->posx = obj->posx + (obj->dx * (-obj->speedx));
-		if (obj->posx + obj->spriteszx >= VGA_WIDTH || obj->posx <= 0) obj->dx = -obj->dx;
+		// Evitar wrap quando posx fica negativo (armazenado como unsigned)
+		if (obj->posx > VGA_WIDTH) {
+			obj->posx = 0;
+			obj->dx = -obj->dx;
+		} else if (obj->posx + obj->spriteszx >= VGA_WIDTH) {
+			obj->posx = (VGA_WIDTH >= obj->spriteszx) ? (VGA_WIDTH - obj->spriteszx) : 0;
+			obj->dx = -obj->dx;
+		} else if (obj->posx == 0) {
+			obj->dx = -obj->dx;
+		}
 	} else if (--obj->speedxcnt == 0) {
 		obj->speedxcnt = obj->speedx;
 		obj->posx = obj->posx + obj->dx;
-		if (obj->posx + obj->spriteszx >= VGA_WIDTH || obj->posx <= 0) obj->dx = -obj->dx; 
+		if (obj->posx > VGA_WIDTH) {
+			obj->posx = 0;
+			obj->dx = -obj->dx;
+		} else if (obj->posx + obj->spriteszx >= VGA_WIDTH) {
+			obj->posx = (VGA_WIDTH >= obj->spriteszx) ? (VGA_WIDTH - obj->spriteszx) : 0;
+			obj->dx = -obj->dx;
+		} else if (obj->posx == 0) {
+			obj->dx = -obj->dx;
+		}
 	}
 	
 	if (obj->speedy < 0) {
@@ -185,6 +235,14 @@ void reset_bullet(struct object_s *b) {
 	b->alive = 0;
 	b->posy = VGA_HEIGHT;
 }
+
+void reset_shield(struct object_s *s) {
+	// Apaga a área do sprite 
+	display_frectangle(s->posx, s->posy, s->spriteszx, s->spriteszy, BLACK);
+	s->posy = VGA_HEIGHT;
+}
+
+
 
 /* enemy_shoot: ativa uma bala livre do pool abaixo de um inimigo escolhido.
    Assinatura pública está em game_functions.h */

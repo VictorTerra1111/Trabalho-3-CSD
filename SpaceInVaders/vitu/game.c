@@ -1,7 +1,10 @@
+//300X218
+
 #include "game_functions.h"
 #include "game_sprites.h"
-
-int PLAYER_SPEED = -2;
+int ENEMYS = 50;
+int ROUNDS = 1;
+int PLAYER_SPEED = -3;
 int SCORE_ATUAL = 0;
 int SCORE = 0;
 int ATTEMPT_COUNT = 1;
@@ -10,8 +13,6 @@ int VIDA = 3;
 int VIDA_ATUAL = 3;
 int VIDA_MAX = 8;
 
-// Quando score chegar nesse valor, encerra o jogo com vitória
-int WIN_SCORE = 10;
 
 // grace frames to avoid immediate collision checks at startup
 int START_GRACE = 3;
@@ -39,6 +40,9 @@ int MOVE_DOWN = 0;
 
 // Velocidade do movimento sincronizado dos inimigos
 int FRAME_COUNT = 0;
+
+// vida dos escudos
+int lsh1 = 5, lsh2 = 5, lsh3 = 5, lsh4 = 5;
 
 // declara os inimigos
 struct object_s EN1[5][10], EN2[5][10], EN3[5][10];
@@ -104,14 +108,11 @@ int main()
 	// player
 	init_object(&PL, &player[0][0], 0, 0, 11, 8, 120, 180, 0, 0, PLAYER_SPEED, PLAYER_SPEED);
 
-	// escudos
-	init_object(&SH1, &shield[0][0], 0, 0, 20, 10, 40, 150, 0, 0, 1, 1);
-
-	init_object(&SH2, &shield[0][0], 0, 0, 20, 10, 100, 150, 0, 0, 1, 1);
-
-	init_object(&SH3, &shield[0][0], 0, 0, 20, 10, 160, 150, 0, 0, 1, 1);
-
-	init_object(&SH4, &shield[0][0], 0, 0, 20, 10, 220, 150, 0, 0, 1, 1);
+	// escudos (agora 24x13) — posicoes ajustadas para evitar overflow
+	init_object(&SH1, &shieldG[0][0], 0, 0, 32, 15, 30, 145, 0, 0, 1, 1);
+	init_object(&SH2, &shieldG[0][0], 0, 0, 32, 15, 90, 145, 0, 0, 1, 1);
+	init_object(&SH3, &shieldG[0][0], 0, 0, 32, 15, 150, 145, 0, 0, 1, 1);
+	init_object(&SH4, &shieldG[0][0], 0, 0, 32, 15, 210, 145, 0, 0, 1, 1);
 
 	// bullet
 	init_object(&BU, &bullet[0][0], 0, 0, 1, 2, PL.posx, PL.posy, 0, -1, 0, -10);
@@ -126,18 +127,22 @@ int main()
 	}
 
 	display_print("score: 0", 0, 0, 1, WHITE);
+	display_print("3", 65, 200, 1, WHITE);
 
 
 	// Print da vida
-	draw_sprite(50, 200, &life[0][0], 11, 8, -1);
-	display_print("3", 65, 200, 1, WHITE);
-
+	
 	//========================//
 	// LOOP PRINCIPAL DO JOGO //
 	//========================//
+	move_object(&SH1);
+	move_object(&SH2);
+	move_object(&SH3);
+	move_object(&SH4);
 
-		while (!GAME_OVER && !WIN )
+	while (!GAME_OVER && !WIN )
 		{
+			draw_sprite(50, 200, &life[0][0], 11, 8, -1);
 			//=====================//
 			// STATUS SUPERIOR//
 			//=====================//
@@ -362,12 +367,21 @@ int main()
 			}
 
 			// DECLARACAO ESCUDOS
-			move_object(&SH1);
-			move_object(&SH2);
-			move_object(&SH3);
-			move_object(&SH4);
 			move_object(&PL);
+			
+			// Garantir que o player não saia da tela após o movimento
+			// `posx` é `unsigned`, então um valor negativo vira um grande unsigned (wrap).
+			// Detectar wrap/underflow verificando se posx ultrapassa a largura da tela.
+			if (PL.posx > VGA_WIDTH)
+				PL.posx = 0;
+			if (PL.posx + PL.spriteszx > VGA_WIDTH)
+				PL.posx = (VGA_WIDTH - PL.spriteszx) >= 0 ? (VGA_WIDTH - PL.spriteszx) : 0;
 			control_player(&PL);
+			// Garantir que o player não saia da tela após controle por input
+			if (PL.posx > VGA_WIDTH)
+				PL.posx = 0;
+			if (PL.posx + PL.spriteszx > VGA_WIDTH)
+				PL.posx = (VGA_WIDTH - PL.spriteszx) >= 0 ? (VGA_WIDTH - PL.spriteszx) : 0;
 
 			if (get_input() == KEY_UP)
 			{
@@ -408,9 +422,9 @@ int main()
 								reset_bullet(&BU);
 								EN1[i][j].alive = 0;
 								BULLET_ACTIVE = 0;
-								SCORE++;
-								if (SCORE >= WIN_SCORE)
-								{
+								SCORE+= 10;
+								ENEMYS --;
+								if(ENEMYS == 0){
 									WIN = 1;
 								}
 								break;
@@ -421,12 +435,13 @@ int main()
 								EN2[i][j].alive = 0;
 								reset_bullet(&BU);
 								BULLET_ACTIVE = 0;
-								SCORE++;
-								if (SCORE >= WIN_SCORE)
-								{
+								SCORE+= 20;
+								ENEMYS --;
+								if(ENEMYS == 0){
 									WIN = 1;
 								}
-								break;
+								break;	
+	
 							}
 							if (detect_collision(&BU, &EN3[0][j]))
 							{
@@ -434,21 +449,116 @@ int main()
 								draw_object(&EN3[0][j], 0, 0);
 								reset_bullet(&BU);
 								BULLET_ACTIVE = 0;
-								SCORE++;
-								if (SCORE >= WIN_SCORE)
-								{
+								SCORE+= 30;
+								ENEMYS --;
+								if(ENEMYS == 0){
 									WIN = 1;
 								}
 								break;
 							}
-							/* colisão com escudos */
-							if (detect_collision(&BU, &SH1) || detect_collision(&BU, &SH2) ||
-								detect_collision(&BU, &SH3) || detect_collision(&BU, &SH4))
-							{
+							/* colisão com escudos 
+							*/
+
+							if(detect_collision(&BU, &SH1)){
+								lsh1--;
+								switch (lsh1){
+									case 4:
+										draw_object(&SH1, 0,LGREEN );
+										break;
+									case 3:
+										draw_object(&SH1, 0, YELLOW);
+										break;
+									case 2:
+										draw_object(&SH1, 0, LYELLOW);
+										break;
+									case 1:
+										draw_object(&SH1, 0, RED);
+										break;
+									case 0:
+										reset_shield(&SH1);
+										break;
+								}
 								reset_bullet(&BU);
 								BULLET_ACTIVE = 0;
 								continue;
 							}
+
+							if(detect_collision(&BU, &SH2)){
+								lsh2--;
+								switch (lsh2){
+									case 4:
+										draw_object(&SH2, 0,LGREEN );
+										break;
+									case 3:
+										draw_object(&SH2, 0,YELLOW);
+										break;
+									case 2:
+										draw_object(&SH2, 0, LYELLOW);
+										break;
+									case 1:
+										
+									draw_object(&SH2, 0, RED);
+										break;
+									case 0:
+										reset_shield(&SH2);
+										break;
+								}
+								reset_bullet(&BU);
+								BULLET_ACTIVE = 0;
+								continue;
+							}
+
+							if(detect_collision(&BU, &SH3) || detect_collision(&EBU[0], &SH3)){
+								lsh3--;
+								switch (lsh3){
+									case 4:
+										draw_object(&SH3, 0,LGREEN);
+										break;
+									case 3:
+										draw_object(&SH3, 0,YELLOW);
+										break;
+									case 2:
+										draw_object(&SH3, 0, LYELLOW);
+										break;
+									case 1:
+										
+									draw_object(&SH3, 0, RED);
+										break;
+									case 0:
+										reset_shield(&SH3);
+										break;
+								}
+								reset_bullet(&BU);
+								BULLET_ACTIVE = 0;
+								continue;
+							}
+							
+							if(detect_collision(&BU, &SH4)){
+								lsh4--;
+								switch  (lsh4){
+									case 4:
+										draw_object(&SH4, 0,LGREEN );
+										break;
+									case 3:
+										draw_object(&SH4, 0,YELLOW);
+										break;
+									case 2:
+										draw_object(&SH4, 0, LYELLOW);
+										break;
+									case 1:
+										
+									draw_object(&SH4, 0, RED);
+										break;
+									case 0:
+										reset_shield(&SH4);
+										break;
+								}
+								
+								reset_bullet(&BU);
+								BULLET_ACTIVE = 0;
+								continue;
+							}
+							
 						}
 					}
 				}
@@ -464,7 +574,7 @@ int main()
 					continue;
 				move_object(&EBU[kb]);
 				// saiu da tela //
-				if (EBU[kb].posy + EBU[kb].spriteszy >= VGA_HEIGHT)
+				if (EBU[kb].posy + EBU[kb].spriteszy >= 190)
 				{
 					reset_bullet(&EBU[kb]);
 					continue;
@@ -515,18 +625,21 @@ int main()
 		if(GAME_OVER){
 			init_display();
 
+		
+			lsh1 = 5; lsh2 = 5; lsh3 = 5; lsh4 = 5;
+
 			char SCORE_final[20];
 			int_to_string(SCORE, SCORE_final);
 
-			char ATTEMPT_COUNT_str[20];
-			int_to_string(ATTEMPT_COUNT, ATTEMPT_COUNT_str);
+			char ROUNDS_COUNT_str[20];
+			int_to_string(ROUNDS, ROUNDS_COUNT_str);
 
 			display_frectangle(0, 100, VGA_WIDTH, 40, BLACK);
 			display_print("Game Over", 40, 90, 3, WHITE);
 			display_print("SCORE", 120, 125, 1, WHITE);
 			display_print(SCORE_final, 170, 125, 1, WHITE);
-			display_print("ATTEMPT:", 115, 140, 1, WHITE);
-			display_print(ATTEMPT_COUNT_str, 185, 140, 1, WHITE);
+			display_print("ROUNDS:", 115, 140, 1, WHITE);
+			display_print(ROUNDS_COUNT_str, 185, 140, 1, WHITE);
 
 			while (!RESTART_REQUESTED)
 			{
@@ -540,12 +653,14 @@ int main()
 			{
 				// reseta variáveis de controle
 				display_background(BLACK);
+				ENEMYS = 50;
+				ROUNDS = 1;
 				ATTEMPT_COUNT++;
-				PLAYER_SPEED = -2;
+				PLAYER_SPEED = -3;
 				SCORE_ATUAL = 0;
 				SCORE = 0;
-				VIDA = 1;
-				VIDA_ATUAL = 1;
+				VIDA = 3;
+				VIDA_ATUAL = 3;
 				START_GRACE = 3;
 				ENEMY_BULLET_TIMER = 20;
 				ENEMY_BULLET = 0;
@@ -558,7 +673,6 @@ int main()
 				FRAME_COUNT = 0;
 			}
 
-			// chama a main loop recursivamente
 			main();
 		}
 
@@ -567,16 +681,22 @@ int main()
 		// ==========================
 		if(WIN){
 			init_display();
-			display_print("You Win!", 40, 90, 3, WHITE);
+
+			ROUNDS++;
+			char ROUNDS_COUNT_str[20];
+			int_to_string(ROUNDS, ROUNDS_COUNT_str);
+
+			display_print("ROUND ", 50, 90, 3, WHITE);
+			display_print(ROUNDS_COUNT_str, 180, 90, 3, WHITE);
 
 			delay_ms(5000);
 			display_background(BLACK);
+				ENEMYS = 50;
 				ATTEMPT_COUNT++;
-				PLAYER_SPEED = -2;
-				SCORE_ATUAL = 0;
-				SCORE = 0;
-				VIDA = 1;
-				VIDA_ATUAL = 1;
+				PLAYER_SPEED = -3;
+				SCORE += SCORE_ATUAL;
+				VIDA = VIDA_ATUAL ;
+				if (VIDA < VIDA_MAX) VIDA++;
 				START_GRACE = 3;
 				ENEMY_BULLET_TIMER = 20;
 				ENEMY_BULLET = 0;
