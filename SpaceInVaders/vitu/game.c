@@ -16,7 +16,7 @@ int VIDA_MAX = 8;
 
 // grace frames to avoid immediate collision checks at startup
 int START_GRACE = 3;
-
+int SPEED_EN = 3;
 // Controle de ciclos de tiro dos inimigos (50ms cada ciclo -> 20 ciclos = 1 segundo)
 int ENEMY_BULLET_TIMER = 20;
 int ENEMY_BULLET = 0;
@@ -66,7 +66,7 @@ int main()
 	// 1 fileira de 10 inimigos tipo EN3 (monster3)
 	for (j = 0; j < 10; j++)
 	{
-		init_object(&EN3[0][j], &monster3_an1[0][0], &monster3_an2[0][0], 0, 11, 8, 10 + j * 25, 20, 0, 0, 3, 3);
+		init_object(&EN3[0][j], &monster3_an1[0][0], &monster3_an2[0][0], 0, 11, 8, 10 + j * 25, 20, 0, 0, (ROUNDS + SPEED_EN), (ROUNDS + SPEED_EN));
 	}
 
 	// 2 fileiras de 10 inimigos tipo EN2 (monster2)
@@ -74,7 +74,7 @@ int main()
 	{
 		for (j = 0; j < 10; j++)
 		{
-			init_object(&EN2[i][j], &monster2_an1[0][0], &monster2_an2[0][0], 0, 11, 8, 10 + j * 25, 35 + i * 15, 0, 0, 3, 3);
+			init_object(&EN2[i][j], &monster2_an1[0][0], &monster2_an2[0][0], 0, 11, 8, 10 + j * 25, 35 + i * 15, 0, 0, (ROUNDS + SPEED_EN), (ROUNDS + SPEED_EN));
 		}
 	}
 
@@ -84,7 +84,7 @@ int main()
 		for (j = 0; j < 10; j++)
 		{
 			init_object(&EN1[i][j], &monster1_an1[0][0], &monster1_an2[0][0], 0,
-						8, 8, 10 + j * 25, 65 + i * 15, 0, 0, 3, 3);
+						8, 8, 10 + j * 25, 65 + i * 15, 0, 0, (ROUNDS + SPEED_EN), (ROUNDS + SPEED_EN));
 		}
 	}
 
