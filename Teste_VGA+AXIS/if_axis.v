@@ -1,7 +1,7 @@
 module if_axis #(
 	parameter AXIS_DATA_WIDTH = 8,
-	parameter SOC_SEGMENT = 'He4,
-	parameter SOC_CLASS = 'Ha9
+	parameter [31:0] SOC_SEGMENT = 32'he4,
+	parameter [31:0] SOC_CLASS = 32'ha9
 )(
 	input wire [31:0] addr_i,
 	output wire [31:0] data_o,
@@ -13,6 +13,7 @@ module if_axis #(
 	input wire s_axis_tvalid_i,
 	input wire [AXIS_DATA_WIDTH - 1:0] s_axis_tdata_i
 );
+
 
 	// AXIS internal signals
 	wire data_access;

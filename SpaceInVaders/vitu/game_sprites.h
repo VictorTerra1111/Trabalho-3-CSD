@@ -25,5 +25,10 @@ extern char shieldR[15][32];
 
 extern char bullet[2][1];
 
+// Explosions (animation frames) 
+extern char explosion_an1[8][8];
+extern char explosion_an2[8][8];
+extern char explosion_an3[8][8];
+
 
 #endif
