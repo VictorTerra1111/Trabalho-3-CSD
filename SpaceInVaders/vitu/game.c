@@ -3,6 +3,7 @@
 #include "game_functions.h"
 #include "game_sprites.h"
 
+
 int ENEMYS = 50;
 int ROUNDS = 1;
 int PLAYER_SPEED = -3;
@@ -61,7 +62,7 @@ int main()
 {
 
 	init_display();
-	init_input();
+	//init_input();
 
 	//===========================
 	// INICIALIZAÇÃO DOS OBJETOS
@@ -402,6 +403,7 @@ int main()
 		// ===========================
 
 		// Verifica se o botão de tiro foi pressionado
+		
 		if (get_input() == KEY_UP)
 		{
 			// Se não houver tiro ativo e o reload timer zerado, atira

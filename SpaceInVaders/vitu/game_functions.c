@@ -1,5 +1,6 @@
 #include "game_functions.h"
 #include "game_sprites.h"
+#include "keyboard_axi.h"
 
 void draw_sprite(unsigned int x, unsigned int y, char *sprite,
 	unsigned int sizex, unsigned int sizey, int color)
@@ -148,6 +149,7 @@ void init_input()
 
 int get_input()
 {
+	/*
 	int keys = 0;
 	
 	if (GPIOB->IN & MASK_P8)	keys |= KEY_CENTER;
@@ -156,6 +158,17 @@ int get_input()
 	if (GPIOB->IN & MASK_P11)	keys |= KEY_RIGHT;
 	if (GPIOB->IN & MASK_P12)	keys |= KEY_DOWN;
 		
+	return keys;*/
+	
+	// Usar teclado AXI
+	unsigned char key = sw_axi();
+	int keys = 0;
+	// Mapear códigos do teclado para ações do jogo
+	if (key == 0x1C) keys |= KEY_LEFT;   // 'a'
+	if (key == 0x23) keys |= KEY_RIGHT;  // 'd'
+	if (key == 0x1D) keys |= KEY_UP;     // 'w'
+	if (key == 0x1A) keys |= KEY_DOWN;   // 'z'
+	if (key == 0x15) keys |= KEY_CENTER; // 'q' (exemplo)
 	return keys;
 }
 
@@ -173,6 +186,7 @@ int detect_collision(struct object_s *obj1, struct object_s *obj2)
 }
 
 void control_player(struct object_s *player){
+
 	int keys = get_input();
 
 	if (keys == KEY_LEFT) {
@@ -181,9 +195,8 @@ void control_player(struct object_s *player){
 	if (keys == KEY_RIGHT) {
 		player->dx = 1;
 	}
-	if (keys == 0) {
-		player->dx = 0;
-	}
+	if (!keys)player->dx = 0;
+	
 }
 
 	void int_to_string(int num, char *str) {
