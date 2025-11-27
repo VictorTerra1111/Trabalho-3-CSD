@@ -767,7 +767,7 @@ int main()
 			// 	reset_bullet(&EBU[kb]);
 			// 	continue;
 			// }
-
+		}
 			ENEMY_BULLET--;
 			if (ENEMY_BULLET <= 0)
 			{
@@ -889,4 +889,3 @@ int main()
 
 		return 0;
 	}
-}
