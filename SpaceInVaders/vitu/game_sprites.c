@@ -133,47 +133,47 @@ char monster1_an2[8][8] = {
 };
 
 char monster2_an1[8][11] = {
-	{0, 0, 5, 5, 0, 0, 0, 5, 5, 0, 0}, // chifres/espinhos
-	{0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0}, // cabeça larga
-	{0, 5, 0, 5, 5, 5, 5, 5, 0, 5, 0}, // olhos grandes
-	{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}, // corpo robusto
+	{0, 0, 5, 0, 0, 0, 0, 0, 5, 0, 0}, // chifres/espinhos
+	{0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0}, // cabeça larga
+	{0, 0, 5, 5, 5, 5, 5, 5, 5, 0, 0}, // olhos grandes
+	{0, 5, 5, 0, 5, 5, 5, 0, 5, 5, 0}, // corpo robusto
 	{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}, // corpo largo
-	{0, 5, 5, 0, 5, 5, 5, 0, 5, 5, 0}, // boca ameaçadora
-	{0, 0, 5, 5, 5, 0, 5, 5, 5, 0, 0}, // mandíbula forte
-	{0, 0, 5, 0, 0, 0, 0, 0, 5, 0, 0}  // pernas
+	{5, 0, 5, 5, 5, 5, 5, 5, 5, 0, 5}, // boca ameaçadora
+	{5, 0, 5, 0, 0, 0, 0, 0, 5, 0, 5}, // mandíbula forte
+	{0, 0, 0, 5, 5, 0, 5, 5, 0, 0, 0}  // pernas
 };
 
 char monster2_an2[8][11] = {
-	{0, 0, 5, 5, 0, 0, 0, 5, 5, 0, 0}, // chifres/espinhos
-	{0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0}, // cabeça larga
-	{0, 5, 5, 0, 5, 5, 5, 0, 5, 5, 0}, // olhos fechando
-	{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}, // corpo robusto
+	{0, 0, 5, 0, 0, 0, 0, 0, 5, 0, 0}, // chifres/espinhos
+	{5, 0, 0, 5, 0, 0, 0, 5, 0, 0, 5}, // cabeça larga
+	{5, 0, 5, 5, 5, 5, 5, 5, 5, 0, 5}, // olhos grandes
+	{5, 5, 5, 0, 5, 5, 5, 0, 5, 5, 5}, // corpo robusto
 	{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}, // corpo largo
-	{0, 5, 5, 5, 0, 5, 0, 5, 5, 5, 0}, // boca rugindo
-	{0, 0, 5, 5, 5, 0, 5, 5, 5, 0, 0}, // mandíbula forte
-	{0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 0}  // pernas alternadas
+	{0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0}, // boca ameaçadora
+	{0, 0, 5, 0, 0, 0, 0, 0, 5, 0, 0}, // mandíbula forte
+	{0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 0}  // pernas
 };
 
 char monster3_an1[8][11] = {
-	{0, 6, 0, 6, 6, 6, 6, 6, 0, 6, 0}, // espinhos maiores
-	{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6}, // cabeça blindada
-	{6, 0, 0, 6, 6, 6, 6, 6, 0, 0, 6}, // olhos profundos
-	{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6}, // corpo armado
+	{0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0}, // espinhos maiores
+	{0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0}, // cabeça blindada
+	{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6}, // olhos profundos
+	{6, 6, 0, 0, 6, 6, 6, 0, 0, 6, 6}, // corpo armado
 	{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6}, // torso completo
-	{6, 6, 0, 0, 0, 0, 0, 0, 0, 6, 6}, // boca grande
-	{0, 6, 6, 6, 0, 0, 0, 6, 6, 6, 0}, // ombros fortes
-	{0, 6, 0, 0, 0, 0, 0, 0, 0, 6, 0}  // pernas estáveis
+	{0, 0, 6, 6, 6, 0, 6, 6, 6, 0, 0}, // boca grande
+	{0, 6, 6, 0, 0, 6, 0, 0, 6, 6, 0}, // ombros fortes
+	{6, 6, 0, 0, 0, 0, 0, 0, 0, 6, 6}  // pernas estáveis
 };
 
 char monster3_an2[8][11] = {
-	{0, 6, 0, 6, 6, 6, 6, 6, 0, 6, 0}, // espinhos maiores
-	{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6}, // cabeça blindada
-	{6, 6, 0, 6, 6, 6, 6, 6, 0, 6, 6}, // olhos focados
-	{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6}, // corpo armado
+	{0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0}, // espinhos maiores
+	{0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0}, // cabeça blindada
+	{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6}, // olhos profundos
+	{6, 6, 0, 0, 6, 6, 6, 0, 0, 6, 6}, // corpo armado
 	{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6}, // torso completo
-	{6, 6, 6, 0, 0, 0, 0, 0, 6, 6, 6}, // boca fechada
-	{0, 6, 6, 6, 0, 0, 0, 6, 6, 6, 0}, // ombros fortes
-	{0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0}  // pernas alternadas
+	{0, 6, 6, 6, 6, 0, 6, 6, 6, 6, 0}, // boca grande
+	{6, 6, 0, 0, 0, 6, 0, 0, 0, 6, 6}, // ombros fortes
+	{0, 6, 6, 0, 0, 0, 0, 0, 6, 6, 0}  // pernas estáveis
 };
 
 char player[8][11] = {
