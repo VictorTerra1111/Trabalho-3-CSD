@@ -161,14 +161,22 @@ int get_input()
 	return keys;*/
 	
 	// Usar teclado AXI
+	static unsigned char last_key = 0;
 	unsigned char key = sw_axi();
 	int keys = 0;
-	// Mapear códigos do teclado para ações do jogo
-	if (key == 0x1C) keys |= KEY_LEFT;   // 'a'
-	if (key == 0x23) keys |= KEY_RIGHT;  // 'd'
-	if (key == 0x1D) keys |= KEY_UP;     // 'w'
-	if (key == 0x1A) keys |= KEY_DOWN;   // 'z'
-	if (key == 0x15) keys |= KEY_CENTER; // 'q' (exemplo)
+	// Se receber código de tecla solta ou nenhum código, para o movimento
+	if (key == 0xF0 || key == 0) {
+		last_key = 0;
+		return 0;
+	}
+	// Se recebeu nova tecla, atualiza
+	if (key != 0) last_key = key;
+
+	if (last_key == 0x1C) keys |= KEY_LEFT;   // 'a'
+	else if (last_key == 0x23) keys |= KEY_RIGHT;  // 'd'
+	else if (last_key == 0x1D) keys |= KEY_UP;     // 'w'
+	else if (last_key == 0x1A) keys |= KEY_DOWN;   // 'z'
+	else if (last_key == 0x15) keys |= KEY_CENTER; // 'q' (exemplo)
 	return keys;
 }
 
@@ -191,11 +199,13 @@ void control_player(struct object_s *player){
 
 	if (keys == KEY_LEFT) {
 		player->dx = -1;
-	}
-	if (keys == KEY_RIGHT) {
+	
+	} else if (keys == KEY_RIGHT) {
 		player->dx = 1;
+		
+	} else {
+		player->dx = 0;
 	}
-	if (!keys)player->dx = 0;
 	
 }
 

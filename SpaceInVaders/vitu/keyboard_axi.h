@@ -1,5 +1,3 @@
-
-
 #define SW_AXI_BASE			0xe4a90000
 
 #define SW_AXI_STATUS			(*(volatile uint32_t *)(SW_AXI_BASE + 0x010))
@@ -14,8 +12,8 @@ uint8_t sw_axi()
 	uint8_t data;
 	
 	data = SW_AXI_SDATA;
-	//while (!(SW_AXI_STATUS & SW_AXI_STVALID));
-	//data = SW_AXI_SDATA;
+	while (!(SW_AXI_STATUS & SW_AXI_STVALID));
+	data = SW_AXI_SDATA;
 	
 	return data;
 }
@@ -26,6 +24,8 @@ int keyboard(){
 	int released = 0;
 
 	unsigned char old_code = 0;
+	
+	printf("Iniciando leitura!\n");
 	
 	while (1) {
 		unsigned char code = sw_axi();

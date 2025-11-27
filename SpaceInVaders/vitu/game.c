@@ -665,8 +665,8 @@ int main()
 				reset_bullet(&EBU[kb]);
 				continue;
 			}
-
-			// // Colisão com escudos (mudam de cor a cada dano)
+			
+			 // Colisão com escudos (mudam de cor a cada dano)
 			// if (detect_collision(&EBU[kb], &SH1))
 			// {
 			// 	lsh1--;
