@@ -657,116 +657,116 @@ int main()
 			}
 
 			// // Colisão com escudos (não dão dano por enquanto)
-			// if (detect_collision(&EBU[kb], &SH1) || detect_collision(&EBU[kb], &SH2) ||
-			// 	detect_collision(&EBU[kb], &SH3) || detect_collision(&EBU[kb], &SH4))
+			if (detect_collision(&EBU[kb], &SH1) || detect_collision(&EBU[kb], &SH2) ||
+				detect_collision(&EBU[kb], &SH3) || detect_collision(&EBU[kb], &SH4))
+			{
+				reset_bullet(&EBU[kb]);
+				continue;
+			}
+
+			// // Colisão com escudos (mudam de cor a cada dano)
+			// if (detect_collision(&EBU[kb], &SH1))
 			// {
+			// 	lsh1--;
+			// 	switch (lsh1)
+			// 	{
+			// 	case 4:
+			// 		draw_object(&SH1, 0, LGREEN);
+			// 		break;
+			// 	case 3:
+			// 		draw_object(&SH1, 0, YELLOW);
+			// 		break;
+			// 	case 2:
+			// 		draw_object(&SH1, 0, LYELLOW);
+			// 		break;
+			// 	case 1:
+			// 		draw_object(&SH1, 0, RED);
+			// 		break;
+			// 	case 0:
+			// 		reset_shield(&SH1);
+			// 		break;
+			// 	}
 			// 	reset_bullet(&EBU[kb]);
 			// 	continue;
 			// }
 
-			// Colisão com escudos (mudam de cor a cada dano)
-			if (detect_collision(&EBU[kb], &SH1))
-			{
-				lsh1--;
-				switch (lsh1)
-				{
-				case 4:
-					draw_object(&SH1, 0, LGREEN);
-					break;
-				case 3:
-					draw_object(&SH1, 0, YELLOW);
-					break;
-				case 2:
-					draw_object(&SH1, 0, LYELLOW);
-					break;
-				case 1:
-					draw_object(&SH1, 0, RED);
-					break;
-				case 0:
-					reset_shield(&SH1);
-					break;
-				}
-				reset_bullet(&EBU[kb]);
-				continue;
-			}
+			// if (detect_collision(&EBU[kb], &SH2))
+			// {
+			// 	lsh2--;
+			// 	switch (lsh2)
+			// 	{
+			// 	case 4:
+			// 		draw_object(&SH2, 0, LGREEN);
+			// 		break;
+			// 	case 3:
+			// 		draw_object(&SH2, 0, YELLOW);
+			// 		break;
+			// 	case 2:
+			// 		draw_object(&SH2, 0, LYELLOW);
+			// 		break;
+			// 	case 1:
 
-			if (detect_collision(&EBU[kb], &SH2))
-			{
-				lsh2--;
-				switch (lsh2)
-				{
-				case 4:
-					draw_object(&SH2, 0, LGREEN);
-					break;
-				case 3:
-					draw_object(&SH2, 0, YELLOW);
-					break;
-				case 2:
-					draw_object(&SH2, 0, LYELLOW);
-					break;
-				case 1:
+			// 		draw_object(&SH2, 0, RED);
+			// 		break;
+			// 	case 0:
+			// 		reset_shield(&SH2);
+			// 		break;
+			// 	}
+			// 	reset_bullet(&EBU[kb]);
+			// 	continue;
+			// }
 
-					draw_object(&SH2, 0, RED);
-					break;
-				case 0:
-					reset_shield(&SH2);
-					break;
-				}
-				reset_bullet(&EBU[kb]);
-				continue;
-			}
+			// if (detect_collision(&EBU[kb], &SH3), &SH3)
+			// {
+			// 	lsh3--;
+			// 	switch (lsh3)
+			// 	{
+			// 	case 4:
+			// 		draw_object(&SH3, 0, LGREEN);
+			// 		break;
+			// 	case 3:
+			// 		draw_object(&SH3, 0, YELLOW);
+			// 		break;
+			// 	case 2:
+			// 		draw_object(&SH3, 0, LYELLOW);
+			// 		break;
+			// 	case 1:
 
-			if (detect_collision(&EBU[kb], &SH3), &SH3)
-			{
-				lsh3--;
-				switch (lsh3)
-				{
-				case 4:
-					draw_object(&SH3, 0, LGREEN);
-					break;
-				case 3:
-					draw_object(&SH3, 0, YELLOW);
-					break;
-				case 2:
-					draw_object(&SH3, 0, LYELLOW);
-					break;
-				case 1:
+			// 		draw_object(&SH3, 0, RED);
+			// 		break;
+			// 	case 0:
+			// 		reset_shield(&SH3);
+			// 		break;
+			// 	}
+			// 	reset_bullet(&EBU[kb]);
+			// 	continue;
+			// }
 
-					draw_object(&SH3, 0, RED);
-					break;
-				case 0:
-					reset_shield(&SH3);
-					break;
-				}
-				reset_bullet(&EBU[kb]);
-				continue;
-			}
+			// if (detect_collision(&EBU[kb], &SH4))
+			// {
+			// 	lsh4--;
+			// 	switch (lsh4)
+			// 	{
+			// 	case 4:
+			// 		draw_object(&SH4, 0, LGREEN);
+			// 		break;
+			// 	case 3:
+			// 		draw_object(&SH4, 0, YELLOW);
+			// 		break;
+			// 	case 2:
+			// 		draw_object(&SH4, 0, LYELLOW);
+			// 		break;
+			// 	case 1:
 
-			if (detect_collision(&EBU[kb], &SH4))
-			{
-				lsh4--;
-				switch (lsh4)
-				{
-				case 4:
-					draw_object(&SH4, 0, LGREEN);
-					break;
-				case 3:
-					draw_object(&SH4, 0, YELLOW);
-					break;
-				case 2:
-					draw_object(&SH4, 0, LYELLOW);
-					break;
-				case 1:
-
-					draw_object(&SH4, 0, RED);
-					break;
-				case 0:
-					reset_shield(&SH4);
-					break;
-				}
-				reset_bullet(&EBU[kb]);
-				continue;
-			}
+			// 		draw_object(&SH4, 0, RED);
+			// 		break;
+			// 	case 0:
+			// 		reset_shield(&SH4);
+			// 		break;
+			// 	}
+			// 	reset_bullet(&EBU[kb]);
+			// 	continue;
+			// }
 
 			ENEMY_BULLET--;
 			if (ENEMY_BULLET <= 0)

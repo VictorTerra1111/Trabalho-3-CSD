@@ -20,15 +20,16 @@ module hfrisc_soc #(
 
     // Internal signals
     reg clock, ram_dly, rff1, reset;
+    reg periph_dly, ext_periph_dly, ext_periph_axi_dly, ext_periph_vga_dly;
     wire boot_enable, ram_enable_n, stall;
     wire [31:0] address, data_read, data_write, data_read_boot, data_read_ram;
     wire [7:0] ext_irq;
     wire [3:0] data_we, data_w_n_ram;
-    wire periph, periph_dly, periph_wr, periph_irq;
+    wire periph, periph_wr, periph_irq;
     wire [31:0] data_read_periph, data_read_periph_s, data_write_periph;
     wire [15:0] gpioa_in, gpioa_out, gpioa_ddr;
     wire [15:0] gpiob_in, gpiob_out, gpiob_ddr;
-    wire ext_periph, ext_periph_axi, ext_periph_vga, ext_periph_dly, ext_periph_vga_dly, ext_periph_axi_dly;
+    wire ext_periph, ext_periph_axi, ext_periph_vga;
     wire reset_n;
     wire [31:0] data_read_axis, data_read_axis_s;
     wire m_axis_tready_s, m_axis_tvalid_s;
@@ -142,12 +143,12 @@ module hfrisc_soc #(
     assign boot_enable = (address[31:28] == 4'b0000);
     assign ram_enable_n = (address[31:28] == 4'b0100) ? 1'b0 : 1'b1;
 
-    // Data read mux
-    assign data_read = (ext_periph_axi || ext_periph_axi_dly) ? data_read_axis :
-                       (ext_periph_vga || ext_periph_vga_dly) ? data_read_vga :
+    // Data read mux (padronizado para VGA)
+    assign data_read = (ext_periph_vga || ext_periph_vga_dly) ? data_read_vga :
+                       (ext_periph_axi || ext_periph_axi_dly) ? data_read_axis :
                        (periph || periph_dly) ? data_read_periph :
                        ((address[31:28] == 4'b0000) && !ram_dly) ? data_read_boot :
-                       data_read_ram;
+                       data_read_ram;?
 
     assign data_w_n_ram = ~data_we;
     assign ext_irq = {7'b0, periph_irq};
@@ -175,6 +176,7 @@ module hfrisc_soc #(
     assign periph_wr = (data_we != 4'b0000);
     assign periph = (address[31:24] == 8'hE1);
 
+    assign data_read_vga = {data_read_vga_s[7:0], data_read_vga_s[15:8], data_read_vga_s[23:16], data_read_vga_s[31:24]};
     assign data_read_axis = {data_read_axis_s[7:0], data_read_axis_s[15:8], data_read_axis_s[23:16], data_read_axis_s[31:24]};
     assign reset_n = ~reset;
 
