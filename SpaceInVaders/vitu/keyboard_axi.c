@@ -20,7 +20,7 @@ uint8_t sw_axi()
 	return data;
 }
 
-int main(){
+int keyboard(){
 
 	int key_active = 0; 
 	int released = 0;
